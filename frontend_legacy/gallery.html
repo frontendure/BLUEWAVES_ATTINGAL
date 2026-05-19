@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Facility Gallery | Blue Waves Premium Swimming Pool</title>
+  <meta name="description"
+    content="Take a virtual tour of the premium facilities, state-of-the-art swimming pools, and training centers at Blue Waves in Attingal, Trivandrum." />
+  <meta name="keywords"
+    content="swimming pool photos, Blue Waves gallery, aquatic center pictures, Trivandrum swimming facilities" />
+  <meta property="og:title" content="Facility Gallery | Blue Waves" />
+  <meta property="og:description" content="Take a virtual tour of the premium facilities at Blue Waves in Attingal." />
+  <meta property="og:type" content="website" />
+
+  <!-- Speed Optimizations -->
+  <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="preload" href="css/style.css" as="style">
+
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="css/style.css">
+
+  <style>
+    /* Gallery-specific styles */
+    .gallery-category {
+      margin-bottom: 100px;
+    }
+
+    .gallery-category:last-child {
+      margin-bottom: 0;
+    }
+
+    .gallery-category-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 40px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid rgba(0, 180, 216, 0.15);
+    }
+
+    .gallery-category-header i {
+      font-size: 2rem;
+      color: var(--accent);
+      text-shadow: 0 0 12px rgba(72, 202, 228, 0.3);
+    }
+
+    .gallery-category-header h2 {
+      font-family: 'Inter', sans-serif;
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--text-light);
+      margin: 0;
+      letter-spacing: -0.5px;
+    }
+
+    .gallery-item {
+      position: relative;
+      border-radius: 16px;
+      overflow: hidden;
+      background: var(--soft-bg);
+      border: 1px solid rgba(0, 180, 216, 0.1);
+      height: 280px;
+      transition: var(--transition);
+      cursor: pointer;
+    }
+
+    .gallery-item:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 40px rgba(0, 180, 216, 0.15);
+      border-color: var(--accent);
+    }
+
+    .gallery-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+
+    .gallery-item:hover img {
+      transform: scale(1.08);
+    }
+
+    /* Placeholder styling for images not yet added */
+    .gallery-placeholder {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, var(--soft-bg), var(--dark-bg));
+      color: var(--text-muted);
+    }
+
+    .gallery-placeholder i {
+      font-size: 3rem;
+      margin-bottom: 10px;
+      opacity: 0.4;
+    }
+
+    .gallery-placeholder span {
+      font-size: 0.85rem;
+      opacity: 0.5;
+    }
+
+    /* Lightbox */
+    .gallery-lightbox {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.95);
+      z-index: 9999;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    .gallery-lightbox.active {
+      display: flex;
+    }
+
+    .gallery-lightbox img {
+      max-width: 90vw;
+      max-height: 90vh;
+      object-fit: contain;
+      border-radius: 8px;
+    }
+
+    .gallery-lightbox .close-btn {
+      position: absolute;
+      top: 20px;
+      right: 30px;
+      font-size: 2rem;
+      color: white;
+      cursor: pointer;
+      z-index: 10000;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- NAVBAR -->
+  <header>
+    <nav class="navbar navbar-expand-lg fixed-top custom-nav" id="navbar">
+      <div class="container-fluid px-3 px-lg-5">
+        <a class="navbar-brand d-flex align-items-center" href="index.html">
+          <img src="assets/logo-dark-transp.PNG" alt="Blue Waves Logo" class="site-logo">
+        </a>
+
+        <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse"
+          data-bs-target="#navMenu">
+          <i class="bi bi-list text-white fs-1"></i>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navMenu">
+          <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-4">
+            <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+            <li class="nav-item"><a class="nav-link" href="programs.html">Programs</a></li>
+            <li class="nav-item"><a class="nav-link" href="membership.html">Membership</a></li>
+            <li class="nav-item"><a class="nav-link active" href="gallery.html">Gallery</a></li>
+            <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+            <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <section class="page-header">
+      <div class="container animate-on-scroll is-visible">
+        <h1>Our Gallery</h1>
+        <p>A visual tour of our state-of-the-art facilities, pool area, training sessions, and the people who make Blue Waves special.</p>
+      </div>
+    </section>
+
+    <section class="section-space">
+      <div class="container">
+
+        <!-- CATEGORY 1: Facilities -->
+        <div class="gallery-category animate-on-scroll" id="facilities">
+          <div class="gallery-category-header">
+            <i class="bi bi-building"></i>
+            <h2>Facilities</h2>
+          </div>
+          <div class="row g-4">
+            <div class="col-md-6 col-lg-4">
+              <div class="gallery-item" onclick="openLightbox(this)">
+                <div class="gallery-placeholder">
+                  <i class="bi bi-image"></i>
+                  <span>Add image: assets/gallery/facilities/1.jpg</span>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6 col-lg-4">
+              <div class="gallery-item" onclick="openLightbox(this)">
+                <div class="gallery-placeholder">
+                  <i class="bi bi-image"></i>
+                  <span>Add image: assets/gallery/facilities/2.jpg</span>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6 col-lg-4">
+              <div class="gallery-item" onclick="openLightbox(this)">
+                <div class="gallery-placeholder">
+                  <i class="bi bi-image"></i>
+                  <span>Add image: assets/gallery/facilities/3.jpg</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- CATEGORY 2: Pool Area -->
+        <div class="gallery-category animate-on-scroll" id="pool-area">
+          <div class="gallery-category-header">
+            <i class="bi bi-water"></i>
+            <h2>Pool Area</h2>
+          </div>
+          <div class="row g-4">
+            <div class="col-md-6 col-lg-4">
+              <div class="gallery-item" onclick="openLightbox(this)">
+                <div class="gallery-placeholder">
+                  <i class="bi bi-image"></i>
+                  <span>Add image: assets/gallery/pool-area/1.jpg</span>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6 col-lg-4">
+              <div class="gallery-item" onclick="openLightbox(this)">
+                <div class="gallery-placeholder">
+                  <i class="bi bi-image"></i>
+                  <span>Add image: assets/gallery/pool-area/2.jpg</span>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6 col-lg-4">
+              <div class="gallery-item" onclick="openLightbox(this)">
+                <div class="gallery-placeholder">
+                  <i class="bi bi-image"></i>
+                  <span>Add image: assets/gallery/pool-area/3.jpg</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- CATEGORY 3: Training -->
+        <div class="gallery-category animate-on-scroll" id="training">
+          <div class="gallery-category-header">
+            <i class="bi bi-stopwatch"></i>
+            <h2>Training</h2>
+          </div>
+          <div class="row g-4">
+            <div class="col-md-6 col-lg-4">
+              <div class="gallery-item" onclick="openLightbox(this)">
+                <div class="gallery-placeholder">
+                  <i class="bi bi-image"></i>
+                  <span>Add image: assets/gallery/training/1.jpg</span>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6 col-lg-4">
+              <div class="gallery-item" onclick="openLightbox(this)">
+                <div class="gallery-placeholder">
+                  <i class="bi bi-image"></i>
+                  <span>Add image: assets/gallery/training/2.jpg</span>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6 col-lg-4">
+              <div class="gallery-item" onclick="openLightbox(this)">
+                <div class="gallery-placeholder">
+                  <i class="bi bi-image"></i>
+                  <span>Add image: assets/gallery/training/3.jpg</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- CATEGORY 4: Swimmers & Coaches -->
+        <div class="gallery-category animate-on-scroll" id="swimmers-coaches">
+          <div class="gallery-category-header">
+            <i class="bi bi-people"></i>
+            <h2>Swimmers & Coaches</h2>
+          </div>
+          <div class="row g-4">
+            <div class="col-md-6 col-lg-4">
+              <div class="gallery-item" onclick="openLightbox(this)">
+                <div class="gallery-placeholder">
+                  <i class="bi bi-image"></i>
+                  <span>Add image: assets/gallery/swimmers-coaches/1.jpg</span>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6 col-lg-4">
+              <div class="gallery-item" onclick="openLightbox(this)">
+                <div class="gallery-placeholder">
+                  <i class="bi bi-image"></i>
+                  <span>Add image: assets/gallery/swimmers-coaches/2.jpg</span>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6 col-lg-4">
+              <div class="gallery-item" onclick="openLightbox(this)">
+                <div class="gallery-placeholder">
+                  <i class="bi bi-image"></i>
+                  <span>Add image: assets/gallery/swimmers-coaches/3.jpg</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  <!-- LIGHTBOX -->
+  <div class="gallery-lightbox" id="galleryLightbox" onclick="closeLightbox()">
+    <span class="close-btn"><i class="bi bi-x-lg"></i></span>
+    <img id="lightboxImage" src="" alt="Gallery Image">
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container">
+      <div class="row g-5">
+        <div class="col-lg-4">
+          <img src="assets/logo-dark-transp.PNG" alt="Blue Waves Logo" class="site-logo-footer mb-4">
+          <p class="footer-text mb-4">Redefining aquatic wellness with state-of-the-art facilities and elite coaching
+            for the discerning swimmer.</p>
+          <div class="social-icons">
+            <a href="#"><i class="bi bi-instagram"></i></a>
+            <a href="#"><i class="bi bi-facebook"></i></a>
+            <a href="#"><i class="bi bi-twitter-x"></i></a>
+          </div>
+        </div>
+
+        <div class="col-lg-2 offset-lg-1 col-md-4">
+          <h5 class="footer-heading">Explore</h5>
+          <a href="index.html" class="footer-link">Home</a>
+          <a href="programs.html" class="footer-link">Programs</a>
+          <a href="membership.html" class="footer-link">Membership</a>
+          <a href="gallery.html" class="footer-link">Gallery</a>
+        </div>
+
+        <div class="col-lg-2 col-md-4">
+          <h5 class="footer-heading">Information</h5>
+          <a href="about.html" class="footer-link">About Us</a>
+          <a href="contact.html" class="footer-link">Contact</a>
+          <a href="#" class="footer-link">Privacy Policy</a>
+          <a href="#" class="footer-link">Terms of Service</a>
+        </div>
+
+        <div class="col-lg-3 col-md-4">
+          <h5 class="footer-heading">Contact</h5>
+          <p class="footer-text mb-2">
+            <i class="bi bi-geo-alt text-primary me-2"></i>
+            <a href="https://maps.app.goo.gl/wrqd2AQjrpPMctRj9" target="_blank" class="text-decoration-none"
+              style="color: inherit;">Pwd Rest House Road Tb Junction Attingal, Trivandrum 695101</a>
+          </p>
+          <p class="footer-text mb-2"><i class="bi bi-telephone text-primary me-2"></i> <a href="tel:+918090900914"
+              class="text-decoration-none" style="color: inherit;">+91 8090900914</a></p>
+          <p class="footer-text">
+            <i class="bi bi-envelope text-primary me-2"></i>
+            <a href="mailto:bluewavesattingal@gmail.com" class="text-decoration-none"
+              style="color: inherit;">bluewavesattingal@gmail.com</a>
+          </p>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p class="mb-0">© 2026 Blue Waves Aquatic Center. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" defer></script>
+  <script src="js/script.js" defer></script>
+
+  <script>
+    function openLightbox(el) {
+      const img = el.querySelector('img');
+      if (!img) return; // Don't open lightbox for placeholders
+      const lightbox = document.getElementById('galleryLightbox');
+      document.getElementById('lightboxImage').src = img.src;
+      lightbox.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeLightbox() {
+      document.getElementById('galleryLightbox').classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
+    // Close on Escape key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeLightbox();
+    });
+  </script>
+</body>
+
+</html>
