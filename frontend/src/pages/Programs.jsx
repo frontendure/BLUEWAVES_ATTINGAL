@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { supabase } from '../lib/supabase'
+import { IconBadge, siteIcons } from '../components/SiteIcon'
 import ScrollAnimation from '../components/ScrollAnimation'
 
 const defaultPool = [
@@ -31,15 +31,29 @@ export default function Programs() {
   const [zumba, setZumba] = useState(defaultZumba)
 
   useEffect(() => {
-    supabase.from('programs').select('*').order('order_val').then(({ data }) => {
-      if (!data?.length) return
-      const p = data.filter(d => d.category === 'pool').map(d => ({ time: d.time_range, label: d.label, badge: d.badge_type }))
-      const y = data.filter(d => d.category === 'yoga').map(d => ({ time: d.time_range, label: d.label }))
-      const z = data.filter(d => d.category === 'zumba').map(d => ({ time: d.time_range, label: d.label }))
-      if (p.length) setPool(p)
-      if (y.length) setYoga(y)
-      if (z.length) setZumba(z)
-    })
+    let active = true
+
+    ;(async () => {
+      try {
+        const { supabase } = await import('../lib/supabase')
+        const { data } = await supabase.from('programs').select('*').order('order_val')
+        if (!active || !data?.length) return
+
+        const p = data.filter(d => d.category === 'pool').map(d => ({ time: d.time_range, label: d.label, badge: d.badge_type }))
+        const y = data.filter(d => d.category === 'yoga').map(d => ({ time: d.time_range, label: d.label }))
+        const z = data.filter(d => d.category === 'zumba').map(d => ({ time: d.time_range, label: d.label }))
+
+        if (p.length) setPool(p)
+        if (y.length) setYoga(y)
+        if (z.length) setZumba(z)
+      } catch {
+        // Keep the default schedule if live data is unavailable.
+      }
+    })()
+
+    return () => {
+      active = false
+    }
   }, [])
 
   const badgeClass = (b) => b === 'ladies' ? 'badge-ladies' : b === 'public' ? 'badge-public' : 'badge-default'
@@ -56,13 +70,19 @@ export default function Programs() {
               <span className="section-label">Weekly Schedule</span>
               <h2>Our Timings</h2>
               <p className="text-muted">Find the perfect slot for your session.</p>
-              <div className="holiday-notice">📅 Please note: Every Wednesday is a holiday for Swimming, Zumba, and Yoga.</div>
+              <div className="holiday-notice">
+                <IconBadge icon={siteIcons.calendar} className="notice-icon" />
+                <span>Please note: Every Wednesday is a holiday for Swimming, Zumba, and Yoga.</span>
+              </div>
             </div>
           </ScrollAnimation>
           <div className="programs-grid">
             <ScrollAnimation>
               <div className="premium-box programs-box">
-                <h4 className="programs-box-title">🏊 Pool Timings</h4>
+                <h4 className="programs-box-title">
+                  <IconBadge icon={siteIcons.pool} className="title-icon" />
+                  <span>Pool Timings</span>
+                </h4>
                 <div className="timing-list">
                   {pool.map((s, i) => (
                     <div key={i} className="timing-row">
@@ -75,9 +95,12 @@ export default function Programs() {
             </ScrollAnimation>
             <ScrollAnimation delay={200}>
               <div className="premium-box programs-box wellness-box">
-                <h4 className="programs-box-title">🧘 Wellness Classes</h4>
+                <h4 className="programs-box-title">
+                  <IconBadge icon={siteIcons.wellness} className="title-icon" />
+                  <span>Wellness Classes</span>
+                </h4>
                 <div className="wellness-group">
-                  <div className="wellness-header"><span className="wellness-icon">🧘</span><h5>Yoga</h5></div>
+                  <div className="wellness-header"><IconBadge icon={siteIcons.yoga} className="wellness-icon" /><h5>Yoga</h5></div>
                   <div className="wellness-times">
                     {yoga.map((s, i) => (
                       <div key={i} className="wellness-time-row"><span>{s.label}</span><span className="wellness-time-value">{s.time}</span></div>
@@ -85,7 +108,7 @@ export default function Programs() {
                   </div>
                 </div>
                 <div className="wellness-group" style={{ marginTop: '2rem' }}>
-                  <div className="wellness-header"><span className="wellness-icon">🎵</span><h5>Zumba</h5></div>
+                  <div className="wellness-header"><IconBadge icon={siteIcons.zumba} className="wellness-icon" /><h5>Zumba</h5></div>
                   <div className="wellness-times">
                     {zumba.map((s, i) => (
                       <div key={i} className="wellness-time-row"><span>{s.label}</span><span className="wellness-time-value">{s.time}</span></div>

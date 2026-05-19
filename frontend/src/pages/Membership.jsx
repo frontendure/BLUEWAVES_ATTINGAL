@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { supabase } from '../lib/supabase'
+import { IconBadge, siteIcons } from '../components/SiteIcon'
 import ScrollAnimation from '../components/ScrollAnimation'
 
 const defaultCoaching = [
@@ -29,20 +29,38 @@ export default function Membership() {
   const [coaching, setCoaching] = useState(defaultCoaching)
   const [publicFees, setPublicFees] = useState(defaultPublic)
   const [wellness, setWellness] = useState(defaultWellness)
-  const [studentPrice, setStudentPrice] = useState('₹100')
+  const [studentPass, setStudentPass] = useState({
+    name: 'Student Pass',
+    price: '₹100',
+    note: 'Applicable for Std 8 to 12. Valid school ID required.'
+  })
 
   useEffect(() => {
-    supabase.from('membership_fees').select('*').order('order_val').then(({ data }) => {
-      if (!data?.length) return
-      const c = data.filter(d => d.category === 'swimming_coaching').map(d => ({ name: d.name, price: d.price, note: d.note }))
-      const p = data.filter(d => d.category === 'swimming_public').map(d => ({ name: d.name, price: d.price, note: d.note }))
-      const w = data.filter(d => d.category === 'wellness').map(d => ({ name: d.name, price: d.price, note: d.note }))
-      const s = data.find(d => d.category === 'special')
-      if (c.length) setCoaching(c)
-      if (p.length) setPublicFees(p)
-      if (w.length) setWellness(w)
-      if (s) setStudentPrice(s.price)
-    })
+    let active = true
+
+    ;(async () => {
+      try {
+        const { supabase } = await import('../lib/supabase')
+        const { data } = await supabase.from('membership_fees').select('*').order('order_val')
+        if (!active || !data?.length) return
+
+        const c = data.filter(d => d.category === 'swimming_coaching').map(d => ({ name: d.name, price: d.price, note: d.note }))
+        const p = data.filter(d => d.category === 'swimming_public').map(d => ({ name: d.name, price: d.price, note: d.note }))
+        const w = data.filter(d => d.category === 'wellness').map(d => ({ name: d.name, price: d.price, note: d.note }))
+        const s = data.find(d => d.category === 'special')
+
+        if (c.length) setCoaching(c.map(item => ({ ...item, highlight: item.name.toLowerCase().includes('advanced'), accent: item.name.toLowerCase().includes('personal') })))
+        if (p.length) setPublicFees(p.map(item => ({ ...item, accent: item.name.toLowerCase().includes('pass') })))
+        if (w.length) setWellness(w)
+        if (s) setStudentPass({ name: s.name, price: s.price, note: s.note || '' })
+      } catch {
+        // Default fee data keeps the page usable offline.
+      }
+    })()
+
+    return () => {
+      active = false
+    }
   }, [])
 
   return (
@@ -62,7 +80,10 @@ export default function Membership() {
           <div className="membership-grid">
             <ScrollAnimation>
               <div className="premium-box membership-box">
-                <h4 className="programs-box-title">🏊 Swimming Programs</h4>
+                <h4 className="programs-box-title">
+                  <IconBadge icon={siteIcons.pool} className="title-icon" />
+                  <span>Swimming Programs</span>
+                </h4>
                 <div className="fee-section-label">WITH COACHING</div>
                 <div className="fee-table">
                   {coaching.map((f, i) => (
@@ -86,14 +107,20 @@ export default function Membership() {
             <ScrollAnimation delay={200}>
               <div className="membership-side">
                 <div className="premium-box membership-box">
-                  <h4 className="programs-box-title">🎫 Special Passes</h4>
+                  <h4 className="programs-box-title">
+                    <IconBadge icon={siteIcons.ticket} className="title-icon" />
+                    <span>Special Passes</span>
+                  </h4>
                   <div className="student-pass">
-                    <div><strong>Student Pass</strong><br /><small>Applicable for Std 8 to 12. Valid school ID required.</small></div>
-                    <div className="student-price">{studentPrice}</div>
+                    <div><strong>{studentPass.name}</strong>{studentPass.note && <><br /><small>{studentPass.note}</small></>}</div>
+                    <div className="student-price">{studentPass.price}</div>
                   </div>
                 </div>
                 <div className="premium-box membership-box" style={{ marginTop: '1.5rem' }}>
-                  <h4 className="programs-box-title">🧘 Wellness Classes</h4>
+                  <h4 className="programs-box-title">
+                    <IconBadge icon={siteIcons.wellness} className="title-icon" />
+                    <span>Wellness Classes</span>
+                  </h4>
                   <div className="fee-table">
                     {wellness.map((f, i) => (
                       <div key={i} className="fee-row">

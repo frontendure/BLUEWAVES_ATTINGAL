@@ -8,16 +8,47 @@ const cats = [
   { key: 'special', label: 'Special Passes' },
 ]
 
+const defaultMemberships = [
+  { category: 'swimming_coaching', name: 'Adult - 1st Month', price: '₹3,000', note: '(+₹500 Admission)' },
+  { category: 'swimming_coaching', name: 'Adult - 2nd Month', price: '₹3,000', note: '' },
+  { category: 'swimming_coaching', name: 'Adult - 3rd Month', price: '₹2,500', note: '' },
+  { category: 'swimming_coaching', name: 'Kids - 1st Month', price: '₹2,500', note: '(+₹500 Admission)' },
+  { category: 'swimming_coaching', name: 'Kids - 2nd Month', price: '₹2,500', note: '' },
+  { category: 'swimming_coaching', name: 'Advanced Coaching', price: '₹2,500', note: '' },
+  { category: 'swimming_coaching', name: 'Personal Training (1 Month)', price: '₹6,000', note: '' },
+  { category: 'swimming_public', name: 'Monthly Plus', price: '₹2,500', note: '(+₹500 Admission)' },
+  { category: 'swimming_public', name: '6 Months Package', price: '₹10,000', note: '' },
+  { category: 'swimming_public', name: '1 Year Package', price: '₹18,000', note: '' },
+  { category: 'swimming_public', name: 'Family Package (4 Members)', price: '₹7,500', note: '' },
+  { category: 'swimming_public', name: 'Public Pass (1 Hour)', price: '₹150', note: '' },
+  { category: 'wellness', name: 'Zumba (Monthly)', price: '₹1,500', note: '(+₹500 Adm)' },
+  { category: 'wellness', name: 'Yoga (Monthly)', price: '₹1,200', note: '(+₹500 Adm)' },
+  { category: 'special', name: 'Student Pass', price: '₹100', note: 'Applicable for Std 8 to 12. Valid school ID required.' }
+]
+
 export default function MembershipFeesManager() {
   const [items, setItems] = useState([])
   const [form, setForm] = useState({ category: 'swimming_coaching', name: '', price: '', note: '' })
+  const [editingId, setEditingId] = useState(null)
+  const [editForm, setEditForm] = useState({})
 
-  const load = () => supabase.from('membership_fees').select('*').order('order_val').then(({ data }) => setItems(data || []))
+  const load = async () => {
+    const { data } = await supabase.from('membership_fees').select('*').order('order_val')
+    if (!data || data.length === 0) {
+      const defaultsWithOrder = defaultMemberships.map((p, i) => ({ ...p, order_val: i }))
+      await supabase.from('membership_fees').insert(defaultsWithOrder)
+      const { data: newData } = await supabase.from('membership_fees').select('*').order('order_val')
+      setItems(newData || [])
+    } else {
+      setItems(data)
+    }
+  }
+
   useEffect(() => { load() }, [])
 
   const add = async () => {
     if (!form.name || !form.price) return alert('Fill name and price')
-    await supabase.from('membership_fees').insert([{ ...form, order_val: Date.now() }])
+    await supabase.from('membership_fees').insert([{ ...form, order_val: Math.floor(Date.now() / 1000) }])
     setForm({ category: 'swimming_coaching', name: '', price: '', note: '' })
     load()
   }
@@ -28,9 +59,32 @@ export default function MembershipFeesManager() {
     load()
   }
 
+  const startEdit = (item) => {
+    setEditingId(item.id)
+    setEditForm({ name: item.name, price: item.price, note: item.note || '' })
+  }
+
+  const saveEdit = async (id) => {
+    if (!editForm.name || !editForm.price) return alert('Fill name and price')
+    await supabase.from('membership_fees').update(editForm).eq('id', id)
+    setEditingId(null)
+    load()
+  }
+
+  const restoreDefaults = async () => {
+    if (!confirm('This will load the current hardcoded site data into the database so you can edit it. Any existing custom edits will be overwritten. Continue?')) return
+    await supabase.from('membership_fees').delete().neq('id', 0)
+    const defaultsWithOrder = defaultMemberships.map((p, i) => ({ ...p, order_val: i }))
+    await supabase.from('membership_fees').insert(defaultsWithOrder)
+    load()
+  }
+
   return (
     <div>
-      <h2>Membership Fees</h2>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <h2>Membership Fees</h2>
+        <button className="btn-brand" style={{ background: '#007bff' }} onClick={restoreDefaults}>Load Current Site Data</button>
+      </div>
       <div className="admin-card">
         <h5>Add Fee Entry</h5>
         <div className="admin-form-row">
@@ -49,17 +103,36 @@ export default function MembershipFeesManager() {
           <div key={cat.key} className="admin-card">
             <h5>{cat.label} ({list.length})</h5>
             {list.length === 0 ? <p>No entries. Default values will be shown.</p> : (
-              <table className="admin-table">
-                <thead><tr><th>Name</th><th>Price</th><th>Note</th><th>Action</th></tr></thead>
-                <tbody>
-                  {list.map(item => (
-                    <tr key={item.id}>
-                      <td>{item.name}</td><td>{item.price}</td><td>{item.note || '-'}</td>
-                      <td><button className="btn-delete" onClick={() => remove(item.id)}>Delete</button></td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+              <div className="admin-table-wrap">
+                <table className="admin-table">
+                  <thead><tr><th>Name</th><th>Price</th><th>Note</th><th>Action</th></tr></thead>
+                  <tbody>
+                    {list.map(item => (
+                      <tr key={item.id}>
+                        {editingId === item.id ? (
+                          <>
+                            <td><input type="text" value={editForm.name} onChange={e => setEditForm({ ...editForm, name: e.target.value })} style={{ width: '100%', padding: '0.4rem' }} /></td>
+                            <td><input type="text" value={editForm.price} onChange={e => setEditForm({ ...editForm, price: e.target.value })} style={{ width: '100%', padding: '0.4rem' }} /></td>
+                            <td><input type="text" value={editForm.note} onChange={e => setEditForm({ ...editForm, note: e.target.value })} style={{ width: '100%', padding: '0.4rem' }} /></td>
+                            <td>
+                              <button className="btn-brand" onClick={() => saveEdit(item.id)} style={{ padding: '0.3rem 0.6rem', fontSize: '0.9rem', marginRight: '0.5rem' }}>Save</button>
+                              <button className="btn-delete" onClick={() => setEditingId(null)} style={{ padding: '0.3rem 0.6rem', fontSize: '0.9rem' }}>Cancel</button>
+                            </td>
+                          </>
+                        ) : (
+                          <>
+                            <td>{item.name}</td><td>{item.price}</td><td>{item.note || '-'}</td>
+                            <td>
+                              <button className="btn-brand" onClick={() => startEdit(item)} style={{ padding: '0.3rem 0.6rem', fontSize: '0.9rem', marginRight: '0.5rem', background: '#4CAF50' }}>Edit</button>
+                              <button className="btn-delete" onClick={() => remove(item.id)} style={{ padding: '0.3rem 0.6rem', fontSize: '0.9rem' }}>Delete</button>
+                            </td>
+                          </>
+                        )}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             )}
           </div>
         )

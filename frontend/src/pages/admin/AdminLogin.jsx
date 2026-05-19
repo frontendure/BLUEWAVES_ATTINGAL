@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { IconBadge, siteIcons } from '../../components/SiteIcon'
 import { supabase } from '../../lib/supabase'
 
 export default function AdminLogin() {
@@ -27,7 +28,7 @@ export default function AdminLogin() {
   return (
     <div className="admin-login-page">
       <div className="admin-login-box">
-        <div style={{ fontSize: '2.5rem', marginBottom: '1rem' }}>🔒</div>
+        <IconBadge icon={siteIcons.locker} className="admin-login-icon" />
         <h3>Staff Portal</h3>
         <form onSubmit={handleSubmit}>
           <div className="form-group"><label>Admin Email</label><input type="email" value={email} onChange={e => setEmail(e.target.value)} required /></div>

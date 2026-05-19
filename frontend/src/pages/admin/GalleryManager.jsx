@@ -9,6 +9,8 @@ export default function GalleryManager() {
   const [alt, setAlt] = useState('')
   const [category, setCategory] = useState('general')
   const [uploading, setUploading] = useState(false)
+  const [editingId, setEditingId] = useState(null)
+  const [editForm, setEditForm] = useState({})
 
   const load = () => supabase.from('gallery').select('*').order('order_val').then(({ data }) => setImages(data || []))
   useEffect(() => { load() }, [])
@@ -30,9 +32,29 @@ export default function GalleryManager() {
     load()
   }
 
+  const startEdit = (img) => {
+    setEditingId(img.id)
+    setEditForm({ alt: img.alt || '', category: img.category || 'general' })
+  }
+
+  const saveEdit = async (id) => {
+    await supabase.from('gallery').update(editForm).eq('id', id)
+    setEditingId(null)
+    load()
+  }
+
+  const clearGallery = async () => {
+    if (!confirm('This will delete all image records from the database. The physical files will remain in storage but won\'t show on the site. Continue?')) return
+    await supabase.from('gallery').delete().neq('id', 0)
+    load()
+  }
+
   return (
     <div>
-      <h2>Gallery</h2>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <h2>Gallery</h2>
+        <button className="btn-brand" style={{ background: '#6c757d' }} onClick={clearGallery}>Clear All (Default)</button>
+      </div>
       <div className="admin-card">
         <h5>Upload Image</h5>
         <div className="admin-form-row">
@@ -50,10 +72,29 @@ export default function GalleryManager() {
           {images.map(img => (
             <div key={img.id} className="admin-image-card">
               <img src={img.url} alt={img.alt || ''} />
-              <div className="admin-image-info">
-                <small>{img.category || 'general'}</small>
-                <button onClick={() => remove(img.id)} className="btn-delete">Delete</button>
-              </div>
+              {editingId === img.id ? (
+                <div style={{ padding: '0.5rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                  <input type="text" value={editForm.alt} onChange={e => setEditForm({ ...editForm, alt: e.target.value })} placeholder="Alt text" style={{ padding: '0.3rem', width: '100%' }} />
+                  <select value={editForm.category} onChange={e => setEditForm({ ...editForm, category: e.target.value })} style={{ padding: '0.3rem', width: '100%' }}>
+                    {cats.map(c => <option key={c} value={c}>{c}</option>)}
+                  </select>
+                  <div style={{ display: 'flex', gap: '0.5rem' }}>
+                    <button onClick={() => saveEdit(img.id)} className="btn-brand" style={{ flex: 1, padding: '0.3rem', fontSize: '0.85rem' }}>Save</button>
+                    <button onClick={() => setEditingId(null)} className="btn-delete" style={{ flex: 1, padding: '0.3rem', fontSize: '0.85rem' }}>Cancel</button>
+                  </div>
+                </div>
+              ) : (
+                <div className="admin-image-info">
+                  <div>
+                    <small style={{ display: 'block', fontWeight: 'bold' }}>{img.category || 'general'}</small>
+                    <small style={{ color: '#666' }}>{img.alt || 'No alt text'}</small>
+                  </div>
+                  <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.5rem' }}>
+                    <button onClick={() => startEdit(img)} className="btn-brand" style={{ background: '#4CAF50', padding: '0.2rem 0.5rem', fontSize: '0.8rem' }}>Edit</button>
+                    <button onClick={() => remove(img.id)} className="btn-delete" style={{ padding: '0.2rem 0.5rem', fontSize: '0.8rem' }}>Delete</button>
+                  </div>
+                </div>
+              )}
             </div>
           ))}
         </div>
