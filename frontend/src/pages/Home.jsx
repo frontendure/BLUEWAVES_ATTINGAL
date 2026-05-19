@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { createPortal } from 'react-dom'
 import { Link } from 'react-router-dom'
 import { IconBadge, siteIcons } from '../components/SiteIcon'
 import ScrollAnimation from '../components/ScrollAnimation'
@@ -127,10 +128,56 @@ function ScheduleBoard() {
     </div>
   )
 }
+function AnnouncementBanner() {
+  const [banner, setBanner] = useState(null)
+  const [isVisible, setIsVisible] = useState(true)
+
+  useEffect(() => {
+    let active = true
+    ;(async () => {
+      try {
+        const { supabase } = await import('../lib/supabase')
+        const { data } = await supabase.from('home_banners').select('*').eq('is_active', true).limit(1)
+        if (active && data?.length) {
+          setBanner(data[0])
+        }
+      } catch {
+        // Handle gracefully
+      }
+    })()
+    return () => { active = false }
+  }, [])
+
+  if (!banner || !isVisible) return null
+
+  return createPortal(
+    <div className="home-announcement-banner">
+      <button className="banner-close-btn" onClick={() => setIsVisible(false)} aria-label="Close announcement">
+        ✕
+      </button>
+      <div className="announcement-content">
+        <h3 className="banner-heading">{banner.heading}</h3>
+        {banner.subheading && <p className="banner-subheading">{banner.subheading}</p>}
+        {banner.content && (
+          <ul className="banner-body-list">
+            {banner.content.split('\n').filter(line => line.trim() !== '').map((line, idx) => (
+              <li key={idx}>
+                <span className="bullet-icon">•</span>
+                <span>{line.trim()}</span>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+    </div>,
+    document.body
+  )
+}
 
 export default function Home() {
   return (
     <>
+      <AnnouncementBanner />
       <section className="hero-section">
         <div className="container hero-grid">
           <ScrollAnimation className="hero-left">

@@ -47,3 +47,17 @@ CREATE POLICY "Auth write programs" ON programs FOR ALL USING (auth.role() = 'au
 
 CREATE POLICY "Public read membership_fees" ON membership_fees FOR SELECT USING (true);
 CREATE POLICY "Auth write membership_fees" ON membership_fees FOR ALL USING (auth.role() = 'authenticated');
+
+-- Home Banners table
+CREATE TABLE IF NOT EXISTS home_banners (
+  id BIGSERIAL PRIMARY KEY,
+  heading TEXT NOT NULL,
+  subheading TEXT,
+  content TEXT,
+  is_active BOOLEAN DEFAULT true,
+  created_at TIMESTAMPTZ DEFAULT now()
+);
+
+ALTER TABLE home_banners ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Public read home_banners" ON home_banners FOR SELECT USING (true);
+CREATE POLICY "Auth write home_banners" ON home_banners FOR ALL USING (auth.role() = 'authenticated');

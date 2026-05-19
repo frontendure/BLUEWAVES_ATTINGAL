@@ -2,20 +2,20 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { IconBadge, siteIcons } from '../../components/SiteIcon'
 import { supabase } from '../../lib/supabase'
-import HeroSlidesManager from './HeroSlidesManager'
 import GalleryManager from './GalleryManager'
 import ProgramsManager from './ProgramsManager'
 import MembershipFeesManager from './MembershipFeesManager'
+import BannerManager from './BannerManager'
 
 const tabs = [
-  { key: 'hero', icon: siteIcons.hero, label: 'Hero Slides' },
   { key: 'gallery', icon: siteIcons.general, label: 'Gallery' },
   { key: 'programs', icon: siteIcons.pool, label: 'Programs' },
   { key: 'fees', icon: siteIcons.fees, label: 'Membership Fees' },
+  { key: 'banner', icon: siteIcons.general, label: 'Home Banner' },
 ]
 
 export default function AdminDashboard() {
-  const [activeTab, setActiveTab] = useState('hero')
+  const [activeTab, setActiveTab] = useState('gallery')
   const [authed, setAuthed] = useState(false)
   const navigate = useNavigate()
 
@@ -62,10 +62,10 @@ export default function AdminDashboard() {
             ))}
           </nav>
         </div>
-        {activeTab === 'hero' && <HeroSlidesManager />}
         {activeTab === 'gallery' && <GalleryManager />}
         {activeTab === 'programs' && <ProgramsManager />}
         {activeTab === 'fees' && <MembershipFeesManager />}
+        {activeTab === 'banner' && <BannerManager />}
       </main>
     </div>
   )
