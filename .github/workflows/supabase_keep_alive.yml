@@ -17,7 +17,21 @@ jobs:
         # We perform a lightweight GET request to the "announcements" table to simulate database activity.
         # You can change "announcements" to any public table you have.
         run: |
-          curl -s -o /dev/null -w "%{http_code}" -X GET "${SUPABASE_URL}/rest/v1/announcements?select=*&limit=1" \
+          if [ -z "$SUPABASE_URL" ]; then
+            echo "❌ ERROR: SUPABASE_URL is empty!"
+            echo "Please ensure you have added SUPABASE_URL as a Repository Secret in GitHub."
+            exit 1
+          fi
+          
+          if [ -z "$SUPABASE_ANON_KEY" ]; then
+            echo "❌ ERROR: SUPABASE_ANON_KEY is empty!"
+            echo "Please ensure you have added SUPABASE_ANON_KEY as a Repository Secret in GitHub."
+            exit 1
+          fi
+          
+          echo "Ping URL: ${SUPABASE_URL}/rest/v1/announcements?select=*&limit=1"
+          
+          curl -S -X GET "${SUPABASE_URL}/rest/v1/announcements?select=*&limit=1" \
           -H "apikey: ${SUPABASE_ANON_KEY}" \
           -H "Authorization: Bearer ${SUPABASE_ANON_KEY}" \
           -H "Content-Profile: public"
