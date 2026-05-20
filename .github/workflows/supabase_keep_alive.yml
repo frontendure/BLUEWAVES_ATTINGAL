@@ -17,21 +17,25 @@ jobs:
         # We perform a lightweight GET request to the "announcements" table to simulate database activity.
         # You can change "announcements" to any public table you have.
         run: |
-          if [ -z "$SUPABASE_URL" ]; then
+          # Strip any accidental newlines or spaces that were pasted into the GitHub Secrets
+          CLEAN_URL=$(echo "$SUPABASE_URL" | tr -d '\n\r ')
+          CLEAN_KEY=$(echo "$SUPABASE_ANON_KEY" | tr -d '\n\r ')
+          
+          if [ -z "$CLEAN_URL" ]; then
             echo "❌ ERROR: SUPABASE_URL is empty!"
             echo "Please ensure you have added SUPABASE_URL as a Repository Secret in GitHub."
             exit 1
           fi
           
-          if [ -z "$SUPABASE_ANON_KEY" ]; then
+          if [ -z "$CLEAN_KEY" ]; then
             echo "❌ ERROR: SUPABASE_ANON_KEY is empty!"
             echo "Please ensure you have added SUPABASE_ANON_KEY as a Repository Secret in GitHub."
             exit 1
           fi
           
-          echo "Ping URL: ${SUPABASE_URL}/rest/v1/announcements?select=*&limit=1"
+          echo "Ping URL: ${CLEAN_URL}/rest/v1/announcements?select=*&limit=1"
           
-          curl -S -X GET "${SUPABASE_URL}/rest/v1/announcements?select=*&limit=1" \
-          -H "apikey: ${SUPABASE_ANON_KEY}" \
-          -H "Authorization: Bearer ${SUPABASE_ANON_KEY}" \
+          curl -S -X GET "${CLEAN_URL}/rest/v1/announcements?select=*&limit=1" \
+          -H "apikey: ${CLEAN_KEY}" \
+          -H "Authorization: Bearer ${CLEAN_KEY}" \
           -H "Content-Profile: public"
