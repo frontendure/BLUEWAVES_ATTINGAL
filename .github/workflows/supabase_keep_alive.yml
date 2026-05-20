@@ -1,54 +1,23 @@
-name: Supabase Keep-Alive
+name: Supabase Keep Alive
 
 on:
   schedule:
-    # Runs every Sunday and Wednesday at midnight UTC
-    - cron: '0 0 */3 * *'
-  workflow_dispatch: # Manual trigger from Actions tab
+    # Runs at 12:00 PM UTC every Monday and Thursday
+    - cron: '0 12 * * 1,4'
+  workflow_dispatch: # Allows you to manually run the workflow from the Actions tab
 
 jobs:
-  keep-alive:
-    name: Ping Supabase Database
+  ping:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-
-      - name: Install Supabase Client
-        run: npm install @supabase/supabase-js
-
-      - name: Ping Database
+      - name: Ping Supabase Database
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+        # We perform a lightweight GET request to the "announcements" table to simulate database activity.
+        # You can change "announcements" to any public table you have.
         run: |
-          node -e "
-          const { createClient } = require('@supabase/supabase-js');
-
-          async function keepAlive() {
-            const supabase = createClient(
-              process.env.SUPABASE_URL,
-              process.env.SUPABASE_KEY
-            );
-
-            // Query 1 row from the gallery table to register activity
-            const { data, error } = await supabase
-              .from('gallery')
-              .select('id')
-              .limit(1);
-
-            if (error) {
-              console.error('❌ Keep-alive query failed:', error.message);
-              process.exit(1);
-            }
-
-            console.log('✅ Supabase keep-alive ping successful!');
-            console.log('📊 Rows returned:', data.length);
-            console.log('🕐 Timestamp:', new Date().toISOString());
-          }
-
-          keepAlive();
-          "
+          curl -s -o /dev/null -w "%{http_code}" -X GET "${SUPABASE_URL}/rest/v1/announcements?select=*&limit=1" \
+          -H "apikey: ${SUPABASE_ANON_KEY}" \
+          -H "Authorization: Bearer ${SUPABASE_ANON_KEY}" \
+          -H "Content-Profile: public"
