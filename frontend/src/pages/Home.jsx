@@ -11,17 +11,17 @@ function HeroSlideshow() {
   useEffect(() => {
     let active = true
 
-    ;(async () => {
-      try {
-        const { supabase } = await import('../lib/supabase')
-        const { data } = await supabase.from('hero_slides').select('*').eq('is_active', true).order('order_val')
-        if (active && data?.length) {
-          setSlides(data)
+      ; (async () => {
+        try {
+          const { supabase } = await import('../lib/supabase')
+          const { data } = await supabase.from('hero_slides').select('*').eq('is_active', true).order('order_val')
+          if (active && data?.length) {
+            setSlides(data)
+          }
+        } catch {
+          // Keep the local hero image as the fast fallback path.
         }
-      } catch {
-        // Keep the local hero image as the fast fallback path.
-      }
-    })()
+      })()
 
     return () => {
       active = false
@@ -102,26 +102,50 @@ const dailySchedule = [
 
 function ScheduleBoard() {
   const day = new Intl.DateTimeFormat('en-US', { timeZone: 'Asia/Kolkata', weekday: 'short' }).format(new Date())
+
+  const now = new Date()
+  const kolkataDate = new Date(now.toLocaleString("en-US", { timeZone: "Asia/Kolkata" }))
+  const hour = kolkataDate.getHours()
+  const minute = kolkataDate.getMinutes()
+  const totalMinutes = hour * 60 + minute
+  const isPoolOpen = totalMinutes >= (6 * 60) && totalMinutes < (22 * 60 + 30)
+
+  let displayedSchedule = dailySchedule.map(s => {
+    if (s.name === 'Pool Sessions') {
+      return { ...s, badge: isPoolOpen ? 'Open' : 'Closed' }
+    }
+    return { ...s }
+  })
+
   if (day === 'Wed') {
-    return (
-      <div className="premium-box" style={{ textAlign: 'center', color: 'white', padding: '2rem' }}>
-        <IconBadge icon={siteIcons.calendar} className="status-icon" />
-        <h3>Holiday Today</h3>
-        <p style={{ color: 'rgba(255,255,255,0.5)' }}>Every Wednesday is a scheduled holiday for all Pool, Yoga, and Zumba sessions at Blue Waves.</p>
-      </div>
-    )
+    displayedSchedule = displayedSchedule.map(s => ({
+      ...s,
+      time: 'Holiday',
+      badge: null
+    }))
+  } else if (day === 'Sun') {
+    displayedSchedule = displayedSchedule.map(s => {
+      if (s.name === 'Yoga' || s.name === 'Zumba') {
+        return { ...s, time: 'Holiday', badge: null }
+      }
+      return s
+    })
   }
+
   return (
     <div className="premium-box">
       <h4 className="schedule-title">Today's Available Timings</h4>
-      {dailySchedule.map(s => (
+      {displayedSchedule.map(s => (
         <div key={s.name} className="schedule-block">
           <div className="schedule-block-header">
             <IconBadge icon={s.icon} className="schedule-icon" />
             <h5>{s.name}</h5>
           </div>
-          <div className="schedule-block-time">{s.time.split('\n').map((l, i) => <span key={i}>{l}<br /></span>)}
-            {s.badge && <span className="badge-open">{s.badge}</span>}
+          <div className="schedule-block-time">
+            {s.time.split('\n').map((l, i) => (
+              l === 'Holiday' ? <span key={i} className="badge-holiday">{l}</span> : <span key={i}>{l}<br /></span>
+            ))}
+            {s.badge && <span className={s.badge === 'Closed' ? 'badge-holiday' : 'badge-open'}>{s.badge}</span>}
           </div>
         </div>
       ))}
@@ -134,17 +158,17 @@ function AnnouncementBanner() {
 
   useEffect(() => {
     let active = true
-    ;(async () => {
-      try {
-        const { supabase } = await import('../lib/supabase')
-        const { data } = await supabase.from('home_banners').select('*').eq('is_active', true).limit(1)
-        if (active && data?.length) {
-          setBanner(data[0])
+      ; (async () => {
+        try {
+          const { supabase } = await import('../lib/supabase')
+          const { data } = await supabase.from('home_banners').select('*').eq('is_active', true).limit(1)
+          if (active && data?.length) {
+            setBanner(data[0])
+          }
+        } catch {
+          // Handle gracefully
         }
-      } catch {
-        // Handle gracefully
-      }
-    })()
+      })()
     return () => { active = false }
   }, [])
 

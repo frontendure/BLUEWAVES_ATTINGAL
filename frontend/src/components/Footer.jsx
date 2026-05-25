@@ -79,6 +79,9 @@ export default function Footer() {
 
           <div className="footer-bottom">
             <p>© {year} Blue Waves Aquatic Center. All rights reserved.</p>
+            <p className="developer-credit">
+              Designed & Developed by <a href="https://frontendure.com" target="_blank" rel="noopener noreferrer" className="developer-link">Frontendure</a>
+            </p>
           </div>
         </div>
       </div>

@@ -33,23 +33,23 @@ export default function Programs() {
   useEffect(() => {
     let active = true
 
-    ;(async () => {
-      try {
-        const { supabase } = await import('../lib/supabase')
-        const { data } = await supabase.from('programs').select('*').order('order_val')
-        if (!active || !data?.length) return
+      ; (async () => {
+        try {
+          const { supabase } = await import('../lib/supabase')
+          const { data } = await supabase.from('programs').select('*').order('order_val')
+          if (!active || !data?.length) return
 
-        const p = data.filter(d => d.category === 'pool').map(d => ({ time: d.time_range, label: d.label, badge: d.badge_type }))
-        const y = data.filter(d => d.category === 'yoga').map(d => ({ time: d.time_range, label: d.label }))
-        const z = data.filter(d => d.category === 'zumba').map(d => ({ time: d.time_range, label: d.label }))
+          const p = data.filter(d => d.category === 'pool').map(d => ({ time: d.time_range, label: d.label, badge: d.badge_type }))
+          const y = data.filter(d => d.category === 'yoga').map(d => ({ time: d.time_range, label: d.label }))
+          const z = data.filter(d => d.category === 'zumba').map(d => ({ time: d.time_range, label: d.label }))
 
-        if (p.length) setPool(p)
-        if (y.length) setYoga(y)
-        if (z.length) setZumba(z)
-      } catch {
-        // Keep the default schedule if live data is unavailable.
-      }
-    })()
+          if (p.length) setPool(p)
+          if (y.length) setYoga(y)
+          if (z.length) setZumba(z)
+        } catch {
+          // Keep the default schedule if live data is unavailable.
+        }
+      })()
 
     return () => {
       active = false
@@ -72,7 +72,7 @@ export default function Programs() {
               <p className="text-muted">Find the perfect slot for your session.</p>
               <div className="holiday-notice">
                 <IconBadge icon={siteIcons.calendar} className="notice-icon" />
-                <span>Please note: Every Wednesday is a holiday for Swimming, Zumba, and Yoga.</span>
+                <span>Every <strong>Wednesday</strong> is a holiday for Swimming, Zumba &amp; Yoga.</span>
               </div>
             </div>
           </ScrollAnimation>
@@ -114,6 +114,10 @@ export default function Programs() {
                       <div key={i} className="wellness-time-row"><span>{s.label}</span><span className="wellness-time-value">{s.time}</span></div>
                     ))}
                   </div>
+                </div>
+                <div className="sunday-holiday-notice">
+                  <IconBadge icon={siteIcons.calendar} className="notice-icon" />
+                  <span> <strong>Sunday Holiday:</strong> Yoga &amp; Zumba classes are closed on Sundays. Pool sessions are open as usual.</span>
                 </div>
               </div>
             </ScrollAnimation>

@@ -1,0 +1,29 @@
+User-agent: *
+Allow: /
+
+# Explicitly allow AI and LLM crawlers for maximum visibility
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: CCBot
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Omgilibot
+Allow: /
+
+User-agent: FacebookBot
+Allow: /
+
+Sitemap: https://bluewavesattingal.com/sitemap.xml

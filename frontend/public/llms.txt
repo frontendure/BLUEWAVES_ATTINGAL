@@ -1,0 +1,14 @@
+# Blue Waves - Aquatic Center
+
+Welcome to the AI-readable index for Blue Waves, Attingal's premier aquatic center.
+We provide expert swimming coaching, kids programs, Zumba sessions, and Yoga classes.
+
+## Pages
+- [Home](https://bluewavesattingal.com/)
+- [About Us](https://bluewavesattingal.com/about)
+- [Programs](https://bluewavesattingal.com/programs)
+- [Membership](https://bluewavesattingal.com/membership)
+- [Gallery](https://bluewavesattingal.com/gallery)
+- [Contact Us](https://bluewavesattingal.com/contact)
+
+For complete text dumps, see [llms-full.txt](https://bluewavesattingal.com/llms-full.txt).

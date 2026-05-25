@@ -1120,6 +1120,20 @@ h6 {
   text-transform: uppercase;
 }
 
+.badge-holiday {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.3rem 0.7rem;
+  margin-left: 0.4rem;
+  border-radius: 999px;
+  background: rgba(255, 80, 50, 0.12);
+  color: #ffb09a;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
 .programs-grid {
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 1.4rem;
@@ -1144,6 +1158,21 @@ h6 {
   color: #ffd08f;
   font-size: 0.92rem;
   font-weight: 600;
+}
+
+.sunday-holiday-notice {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  margin-top: 1.5rem;
+  padding: 0.75rem 1rem;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 120, 90, 0.25);
+  background: rgba(255, 80, 50, 0.08);
+  color: #ffb09a;
+  font-size: 0.88rem;
+  font-weight: 600;
+  line-height: 1.5;
 }
 
 .notice-icon {
@@ -1809,6 +1838,24 @@ h6 {
   max-width: 34rem;
   margin: 0 auto;
   line-height: 1.7;
+}
+
+.developer-credit {
+  margin-top: 0.8rem !important;
+  font-size: 0.85rem;
+  color: var(--text-soft);
+}
+
+.developer-link {
+  color: var(--brand);
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  transition: color 0.3s var(--ease-smooth), text-shadow 0.3s var(--ease-smooth);
+}
+
+.developer-link:hover {
+  color: var(--text-light);
+  text-shadow: 0 0 12px rgba(78, 203, 255, 0.6);
 }
 
 .animate-on-scroll {
