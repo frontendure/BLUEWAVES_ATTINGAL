@@ -431,7 +431,7 @@ h6 {
 .premium-box:hover,
 .gallery-item:hover,
 .pillar-card:hover {
-  transform: translateY(-4px);
+  transform: translateY(-4px) scale(1.01);
 }
 
 .btn-modern-solid:hover,
@@ -534,7 +534,16 @@ h6 {
 }
 
 .hero-slide.active img {
-  animation: hero-zoom 5.2s ease-out both;
+  animation: hero-zoom 8.5s ease-out both;
+}
+
+@keyframes hero-zoom {
+  from {
+    transform: scale(1.05);
+  }
+  to {
+    transform: scale(1);
+  }
 }
 
 .hero-slide-caption {
@@ -566,6 +575,7 @@ h6 {
 }
 
 .dot {
+  position: relative;
   width: 11px;
   height: 11px;
   border: 0;
@@ -573,6 +583,15 @@ h6 {
   background: rgba(255, 255, 255, 0.38);
   cursor: pointer;
   transition: transform 0.25s var(--ease-smooth), background 0.25s var(--ease-smooth);
+}
+
+.dot::after {
+  content: "";
+  position: absolute;
+  top: -16px;
+  right: -16px;
+  bottom: -16px;
+  left: -16px;
 }
 
 .dot.active {
@@ -759,8 +778,8 @@ h6 {
 .pillar-card:hover,
 .gallery-item:hover,
 .about-highlight-card:hover {
-  border-color: var(--border-strong);
-  box-shadow: var(--shadow-lg);
+  border-color: var(--brand);
+  box-shadow: 0 20px 60px rgba(18, 153, 216, 0.15);
 }
 
 .feature-icon,
@@ -2013,16 +2032,28 @@ h6 {
 
 .animate-on-scroll {
   opacity: 0;
-  transform: translateY(34px);
   transition:
-    opacity 0.8s var(--ease-out),
-    transform 0.8s var(--ease-out);
+    opacity 0.6s var(--ease-out),
+    transform 0.6s var(--ease-out);
   will-change: transform, opacity;
+}
+
+.animate-on-scroll.fade-up {
+  transform: translateY(34px);
+}
+.animate-on-scroll.fade-left {
+  transform: translateX(-34px);
+}
+.animate-on-scroll.fade-right {
+  transform: translateX(34px);
+}
+.animate-on-scroll.scale-up {
+  transform: scale(0.92);
 }
 
 .animate-on-scroll.is-visible {
   opacity: 1;
-  transform: translateY(0);
+  transform: translate(0) scale(1);
 }
 
 .animate-on-load {

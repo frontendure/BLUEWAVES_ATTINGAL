@@ -172,11 +172,15 @@ function AnnouncementBanner() {
     return () => { active = false }
   }, [])
 
+  const handleClose = () => {
+    setIsVisible(false)
+  }
+
   if (!banner || !isVisible) return null
 
   return createPortal(
     <div className="home-announcement-banner">
-      <button className="banner-close-btn" onClick={() => setIsVisible(false)} aria-label="Close announcement">
+      <button className="banner-close-btn" onClick={handleClose} aria-label="Close announcement">
         ✕
       </button>
       <div className="announcement-content">
@@ -256,20 +260,20 @@ export default function Home() {
 
       <section className="section-space why-section">
         <div className="container">
-          <ScrollAnimation>
+          <ScrollAnimation animation="fade-right">
             <div className="section-header">
               <span className="section-label">Why Families Return</span>
               <h2>Why Blue Waves?</h2>
               <div className="accent-line"></div>
             </div>
           </ScrollAnimation>
-          <ScrollAnimation delay={100}>
+          <ScrollAnimation delay={100} animation="fade-up">
             <div className="why-text-grid">
               <p>Blue Waves is a premium facility designed to provide a high-performance aquatic program. Our center features a state-of-the-art racing pool, a dedicated warm-up pool, and a safe toddler pool, ensuring a comprehensive swimming experience for all ages and skill levels.</p>
               <p>The amalgamation of premium infrastructure, superior coaching, and modern techniques makes Blue Waves your one-stop destination to learn swimming and imbibe it as a culture in your daily routine. We strive to establish ourselves as a premier aquatic centre of excellence.</p>
             </div>
           </ScrollAnimation>
-          <ScrollAnimation delay={200}>
+          <ScrollAnimation delay={200} animation="fade-left">
             <div className="facilities-grid">
               {facilities.map(f => (
                 <div key={f.label} className="facility-item hover-lift">
@@ -285,7 +289,7 @@ export default function Home() {
       <section className="section-space schedule-section">
         <div className="container">
           <div className="schedule-grid">
-            <ScrollAnimation>
+            <ScrollAnimation animation="fade-right">
               <div className="schedule-left">
                 <span className="section-label">Plan Your Visit</span>
                 <h2>Today's Sessions</h2>
@@ -298,7 +302,7 @@ export default function Home() {
                 <Link to="/membership" className="btn-brand">Reserve a Lane</Link>
               </div>
             </ScrollAnimation>
-            <ScrollAnimation delay={200}>
+            <ScrollAnimation delay={200} animation="fade-left">
               <ScheduleBoard />
             </ScrollAnimation>
           </div>

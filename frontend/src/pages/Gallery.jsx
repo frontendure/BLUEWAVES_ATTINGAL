@@ -182,8 +182,8 @@ export default function Gallery() {
       </section>
       <section className="section-space">
         <div className="container">
-          {grouped.map(cat => (
-            <ScrollAnimation key={cat.key} className="gallery-category">
+          {grouped.map((cat, i) => (
+            <ScrollAnimation key={cat.key} className="gallery-category" delay={i * 100} animation="scale-up">
               <div className="gallery-category-header">
                 <IconBadge icon={cat.icon} className="gallery-cat-icon" />
                 <h2>{cat.label}</h2>
@@ -203,7 +203,7 @@ export default function Gallery() {
             </ScrollAnimation>
           ))}
           {allGeneral.length > 0 && (
-            <ScrollAnimation className="gallery-category">
+            <ScrollAnimation className="gallery-category" delay={grouped.length * 100} animation="scale-up">
               <div className="gallery-category-header"><IconBadge icon={siteIcons.general} className="gallery-cat-icon" /><h2>General</h2></div>
               <div className="gallery-grid">
                 {allGeneral.map(img => (

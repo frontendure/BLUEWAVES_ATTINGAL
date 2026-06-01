@@ -70,7 +70,7 @@ export default function Membership() {
       </section>
       <section className="section-space">
         <div className="container">
-          <ScrollAnimation>
+          <ScrollAnimation animation="scale-up">
             <div className="section-header" style={{ textAlign: 'center' }}>
               <span className="section-label">Complete Breakdown</span>
               <h2>Detailed Fee Structure</h2>
@@ -78,7 +78,7 @@ export default function Membership() {
             </div>
           </ScrollAnimation>
           <div className="membership-grid">
-            <ScrollAnimation>
+            <ScrollAnimation animation="fade-right">
               <div className="premium-box membership-box">
                 <h4 className="programs-box-title">
                   <IconBadge icon={siteIcons.pool} className="title-icon" />
@@ -104,7 +104,7 @@ export default function Membership() {
                 </div>
               </div>
             </ScrollAnimation>
-            <ScrollAnimation delay={200}>
+            <ScrollAnimation delay={200} animation="fade-left">
               <div className="membership-side">
                 <div className="premium-box membership-box">
                   <h4 className="programs-box-title">

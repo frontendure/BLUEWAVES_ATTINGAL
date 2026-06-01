@@ -65,7 +65,7 @@ export default function Programs() {
       </section>
       <section className="section-space">
         <div className="container">
-          <ScrollAnimation>
+          <ScrollAnimation animation="scale-up">
             <div className="section-header" style={{ textAlign: 'center' }}>
               <span className="section-label">Weekly Schedule</span>
               <h2>Our Timings</h2>
@@ -77,7 +77,7 @@ export default function Programs() {
             </div>
           </ScrollAnimation>
           <div className="programs-grid">
-            <ScrollAnimation>
+            <ScrollAnimation animation="fade-right">
               <div className="premium-box programs-box">
                 <h4 className="programs-box-title">
                   <IconBadge icon={siteIcons.pool} className="title-icon" />
@@ -93,7 +93,7 @@ export default function Programs() {
                 </div>
               </div>
             </ScrollAnimation>
-            <ScrollAnimation delay={200}>
+            <ScrollAnimation delay={200} animation="fade-left">
               <div className="premium-box programs-box wellness-box">
                 <h4 className="programs-box-title">
                   <IconBadge icon={siteIcons.wellness} className="title-icon" />

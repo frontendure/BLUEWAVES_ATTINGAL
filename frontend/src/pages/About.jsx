@@ -95,7 +95,7 @@ export default function About() {
       </section>
       <section className="section-space coaches-section">
         <div className="container">
-          <ScrollAnimation>
+          <ScrollAnimation animation="scale-up">
             <div className="section-header section-header-center">
               <span className="section-label">What Sets Us Apart</span>
               <h2>Built around repeatable routines</h2>
@@ -104,7 +104,7 @@ export default function About() {
           </ScrollAnimation>
           <div className="pillar-grid">
             {pillars.map((pillar, i) => (
-              <ScrollAnimation key={pillar.title} delay={(i + 1) * 120}>
+              <ScrollAnimation key={pillar.title} delay={(i + 1) * 120} animation="fade-up">
                 <article className="pillar-card">
                   <IconBadge icon={pillar.icon} className="feature-icon" />
                   <h3>{pillar.title}</h3>
@@ -118,7 +118,7 @@ export default function About() {
       
       <section className="section-space about-rules-section">
         <div className="container">
-          <ScrollAnimation>
+          <ScrollAnimation animation="scale-up">
             <div className="section-header section-header-center">
               <span className="section-label">Safety & Conduct</span>
               <h2>Pool Rules & Regulations</h2>
@@ -126,7 +126,7 @@ export default function About() {
             </div>
           </ScrollAnimation>
           
-          <ScrollAnimation delay={200}>
+          <ScrollAnimation delay={200} animation="fade-up">
             <div className="premium-box rules-box">
               <div className="rules-grid">
                 {rules.map((rule, idx) => (

@@ -27,7 +27,7 @@ export default function Contact() {
       <section className="section-space about-story">
         <div className="container">
           <div className="contact-grid">
-            <ScrollAnimation delay={100}>
+            <ScrollAnimation delay={100} animation="fade-right">
               <div className="contact-info">
                 <h3>Get In Touch</h3>
                 <p className="text-muted">Whether you are looking to refine your stroke, enroll your child in our academy, or inquire about our executive memberships, we are here to help.</p><br />
@@ -40,7 +40,7 @@ export default function Contact() {
                 </a>
               </div>
             </ScrollAnimation>
-            <ScrollAnimation delay={200}>
+            <ScrollAnimation delay={200} animation="fade-left">
               <div className="contact-form-box">
                 {!sent ? (
                   <form onSubmit={handleSubmit}>

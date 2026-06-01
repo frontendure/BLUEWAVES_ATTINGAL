@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react'
 
-export default function ScrollAnimation({ children, className = '', delay = 0 }) {
+export default function ScrollAnimation({ children, className = '', delay = 0, animation = 'fade-up' }) {
   const ref = useRef(null)
 
   useEffect(() => {
@@ -17,13 +17,13 @@ export default function ScrollAnimation({ children, className = '', delay = 0 })
         el.classList.add('is-visible')
         observer.unobserve(el)
       }
-    }, { threshold: 0.15, rootMargin: '0px 0px -60px 0px' })
+    }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' })
     observer.observe(el)
     return () => observer.disconnect()
   }, [])
 
   return (
-    <div ref={ref} className={`animate-on-scroll ${className}`} style={delay ? { transitionDelay: `${delay}ms` } : undefined}>
+    <div ref={ref} className={`animate-on-scroll ${animation} ${className}`} style={delay ? { transitionDelay: `${delay}ms` } : undefined}>
       {children}
     </div>
   )
