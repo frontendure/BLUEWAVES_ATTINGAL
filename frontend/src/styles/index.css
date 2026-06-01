@@ -1,6 +1,8 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap');
+
 :root {
-  --font-display: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif;
-  --font-body: "Avenir Next", "Segoe UI", "Trebuchet MS", sans-serif;
+  --font-display: "Outfit", "Avenir Next", "Segoe UI", sans-serif;
+  --font-body: "Inter", "Segoe UI", sans-serif;
   --safe-top: env(safe-area-inset-top, 0px);
   --safe-right: env(safe-area-inset-right, 0px);
   --safe-bottom: env(safe-area-inset-bottom, 0px);
@@ -41,6 +43,8 @@
 html {
   scroll-behavior: smooth;
   -webkit-text-size-adjust: 100%;
+  background-color: var(--bg);
+  overscroll-behavior-y: none;
 }
 
 body {
@@ -52,6 +56,7 @@ body {
     radial-gradient(circle at top left, rgba(31, 111, 166, 0.34), transparent 34%),
     radial-gradient(circle at top right, rgba(78, 203, 255, 0.14), transparent 24%),
     linear-gradient(180deg, #081522 0%, #04111c 44%, #020a12 100%);
+  overscroll-behavior-y: none;
 }
 
 body::before {
@@ -364,26 +369,7 @@ h6 {
   position: relative;
   width: fit-content;
   padding-right: 0.14em;
-  color: transparent;
-  background: linear-gradient(115deg, #ffffff 0%, #b8efff 28%, var(--brand) 64%, var(--accent) 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-}
-
-.hero-title-wave::after {
-  content: "";
-  position: absolute;
-  left: 0.04em;
-  right: -0.02em;
-  bottom: -0.08em;
-  height: 0.14em;
-  border-radius: 999px;
-  background:
-    linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.7) 16%, transparent 32%),
-    linear-gradient(90deg, rgba(78, 203, 255, 0.7), rgba(255, 190, 107, 0.95));
-  background-size: 180% 100%, 100% 100%;
-  box-shadow: 0 0 24px rgba(78, 203, 255, 0.22);
-  animation: wave-shimmer 3.6s linear infinite;
+  color: var(--text-light);
 }
 
 .hero-text {
@@ -721,17 +707,17 @@ h6 {
   display: grid;
 }
 
-.hero-grid > *,
-.feature-cards-grid > *,
-.footer-grid > *,
-.programs-grid > *,
-.membership-grid > *,
-.contact-grid > *,
-.about-grid > *,
-.schedule-grid > *,
-.why-text-grid > *,
-.gallery-grid > *,
-.pillar-grid > * {
+.hero-grid>*,
+.feature-cards-grid>*,
+.footer-grid>*,
+.programs-grid>*,
+.membership-grid>*,
+.contact-grid>*,
+.about-grid>*,
+.schedule-grid>*,
+.why-text-grid>*,
+.gallery-grid>*,
+.pillar-grid>* {
   min-width: 0;
 }
 
@@ -792,6 +778,7 @@ h6 {
   color: var(--brand);
   line-height: 1;
   flex-shrink: 0;
+  transition: transform 0.4s var(--ease-smooth), color 0.4s var(--ease-smooth);
 }
 
 .feature-icon svg,
@@ -1074,7 +1061,7 @@ h6 {
   border: 1px solid rgba(255, 255, 255, 0.06);
 }
 
-.schedule-block + .schedule-block {
+.schedule-block+.schedule-block {
   margin-top: 0.85rem;
 }
 
@@ -1240,7 +1227,7 @@ h6 {
   border-color: rgba(78, 203, 255, 0.2);
 }
 
-.wellness-group + .wellness-group {
+.wellness-group+.wellness-group {
   margin-top: 2rem;
 }
 
@@ -1278,7 +1265,7 @@ h6 {
   min-width: 0;
 }
 
-.wellness-time-row + .wellness-time-row {
+.wellness-time-row+.wellness-time-row {
   margin-top: 0.8rem;
 }
 
@@ -1355,7 +1342,7 @@ h6 {
   font-weight: 800;
 }
 
-.gallery-category + .gallery-category {
+.gallery-category+.gallery-category {
   margin-top: 4rem;
 }
 
@@ -1466,7 +1453,7 @@ h6 {
   align-items: center;
 }
 
-.about-text p + p {
+.about-text p+p {
   margin-top: 1rem;
 }
 
@@ -1563,7 +1550,7 @@ h6 {
   border: 1px solid rgba(255, 255, 255, 0.06);
 }
 
-.contact-item + .contact-item {
+.contact-item+.contact-item {
   margin-top: 0.9rem;
 }
 
@@ -2253,6 +2240,7 @@ h6 {
 }
 
 @media (max-width: 1080px) {
+
   .hero-grid,
   .about-grid,
   .contact-grid,
@@ -2363,8 +2351,9 @@ h6 {
 }
 
 @media (max-width: 640px) {
-  .container {
+    .container {
     width: min(1240px, calc(100% - 20px));
+    padding: 0 1rem;
   }
 
   .navbar-custom {
@@ -2484,10 +2473,7 @@ h6 {
   }
 
   .holiday-notice,
-  .timing-row,
-  .fee-row,
-  .student-pass,
-  .wellness-time-row {
+  .student-pass {
     flex-direction: column;
     align-items: flex-start;
   }
@@ -2927,13 +2913,23 @@ h6 {
 .home-announcement-banner::before {
   content: '';
   position: absolute;
-  top: 0; left: 0; right: 0; height: 4px;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
   background: linear-gradient(90deg, var(--brand), var(--accent));
 }
 
 @keyframes slideInBottomRight {
-  from { opacity: 0; transform: translateY(20px) scale(0.95); }
-  to { opacity: 1; transform: translateY(0) scale(1); }
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
 .banner-close-btn {
@@ -3044,4 +3040,99 @@ h6 {
   font-weight: bold;
   font-size: 1.1rem;
   line-height: 1.2;
+}
+
+/* Global Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-deep);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--surface-soft);
+  border-radius: 999px;
+  border: 2.5px solid var(--bg-deep);
+  transition: background 0.3s;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--brand);
+}
+
+/* Custom Text Selection */
+::selection {
+  background: rgba(78, 203, 255, 0.25);
+  color: var(--text-light);
+}
+
+/* Hero Scroll Down Indicator */
+.hero-scroll-indicator {
+  position: absolute;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.55rem;
+  color: var(--text-muted);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  pointer-events: none;
+  opacity: 0;
+  animation: fadeInScrollIndicator 1s var(--ease-out) 1.2s forwards;
+  z-index: 5;
+}
+
+.mouse-wheel {
+  width: 22px;
+  height: 34px;
+  border: 2px solid var(--text-soft);
+  border-radius: 999px;
+  position: relative;
+}
+
+.mouse-wheel::before {
+  content: '';
+  position: absolute;
+  top: 6px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 4px;
+  height: 7px;
+  background-color: var(--brand);
+  border-radius: 2px;
+  animation: mouseScroll 2s ease-in-out infinite;
+}
+
+@keyframes mouseScroll {
+  0% { top: 6px; opacity: 1; }
+  50% { top: 16px; opacity: 0; }
+  100% { top: 6px; opacity: 1; }
+}
+
+@keyframes fadeInScrollIndicator {
+  to { opacity: 0.75; }
+}
+
+@media (max-width: 860px) {
+  .hero-scroll-indicator {
+    display: none;
+  }
+}
+
+/* Micro-interactions: Icon Animations on Card/Item Hover */
+.feature-card:hover .feature-icon,
+.facility-item:hover .facility-icon,
+.schedule-block:hover .schedule-icon,
+.programs-box:hover .title-icon,
+.contact-item:hover .contact-icon {
+  transform: scale(1.15) rotate(5deg);
+  color: var(--accent);
 }
