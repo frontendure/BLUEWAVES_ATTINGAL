@@ -72,7 +72,8 @@ body::before {
   opacity: 0.28;
 }
 
-body.menu-open {
+body.menu-open,
+body.lightbox-open {
   overflow: hidden;
 }
 
@@ -338,6 +339,10 @@ h6 {
   font-weight: 700;
   letter-spacing: 0.24em;
   text-transform: uppercase;
+}
+
+.section-label {
+  margin-bottom: 0.8rem;
 }
 
 .hero-chip {
@@ -754,7 +759,8 @@ h6 {
 .feature-card:hover,
 .premium-box:hover,
 .pillar-card:hover,
-.gallery-item:hover {
+.gallery-item:hover,
+.about-highlight-card:hover {
   border-color: var(--border-strong);
   box-shadow: var(--shadow-lg);
 }
@@ -1381,17 +1387,47 @@ h6 {
 }
 
 .gallery-item {
+  position: relative;
   aspect-ratio: 4 / 3;
   overflow: hidden;
   border-radius: var(--radius);
   cursor: pointer;
 }
 
+/* Shimmer skeleton placeholder */
+.gallery-skeleton {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border-radius: inherit;
+  background: linear-gradient(
+    110deg,
+    rgba(255, 255, 255, 0.04) 0%,
+    rgba(255, 255, 255, 0.04) 30%,
+    rgba(78, 203, 255, 0.08) 50%,
+    rgba(255, 255, 255, 0.04) 70%,
+    rgba(255, 255, 255, 0.04) 100%
+  );
+  background-size: 250% 100%;
+  animation: gallery-shimmer 1.6s ease-in-out infinite;
+}
+
+@keyframes gallery-shimmer {
+  0%   { background-position: 100% 0; }
+  100% { background-position: -100% 0; }
+}
+
 .gallery-item img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.55s var(--ease-out), filter 0.4s var(--ease-smooth);
+  opacity: 0;
+  transition: opacity 0.45s var(--ease-smooth), transform 0.55s var(--ease-out), filter 0.4s var(--ease-smooth);
+}
+
+/* Fade image in once loaded */
+.gallery-item--loaded img {
+  opacity: 1;
 }
 
 .gallery-item:hover img {
@@ -1414,33 +1450,145 @@ h6 {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: calc(1.5rem + var(--safe-top)) calc(1.5rem + var(--safe-right)) calc(1.5rem + var(--safe-bottom)) calc(1.5rem + var(--safe-left));
-  background: rgba(2, 7, 12, 0.94);
+  background: rgba(2, 7, 12, 0.96);
+  backdrop-filter: blur(10px);
   cursor: pointer;
+  animation: lightbox-fade-in 0.25s var(--ease-smooth) both;
 }
 
-.gallery-lightbox img {
-  max-width: min(92vw, 1220px);
-  max-height: 90vh;
-  border-radius: 22px;
-  object-fit: contain;
-  box-shadow: var(--shadow-lg);
+@keyframes lightbox-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
 }
 
-.gallery-lightbox .close-btn {
-  position: absolute;
-  top: calc(1.2rem + var(--safe-top));
-  right: calc(1.2rem + var(--safe-right));
-  border: 0;
-  padding: 0.8rem 1rem;
+/* Image counter at bottom center */
+.lightbox-counter {
+  position: fixed;
+  bottom: 1.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 0.45rem 1.1rem;
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.08);
-  color: var(--text-light);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(8px);
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  z-index: 10005;
+  user-select: none;
+}
+
+.lightbox-image-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: min(85vw, 1100px);
+  max-height: 85vh;
+  cursor: default;
+  z-index: 10002;
+}
+
+.lightbox-image-wrapper img {
+  display: block;
+  max-width: 100%;
+  max-height: 85vh;
+  width: auto;
+  height: auto;
+  border-radius: 20px;
+  object-fit: contain;
+  box-shadow: var(--shadow-lg);
+  user-select: none;
   cursor: pointer;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  font-size: 0.78rem;
-  font-weight: 700;
+  transition: transform 0.3s var(--ease-out), opacity 0.35s var(--ease-smooth);
+}
+
+/* Lightbox image loading states */
+.lightbox-img--loading {
+  opacity: 0;
+}
+
+.lightbox-img--loaded {
+  opacity: 1;
+}
+
+/* Lightbox loading spinner */
+.lightbox-spinner {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+}
+
+.lightbox-image-wrapper img:hover {
+  transform: scale(1.015);
+}
+
+/* Lightbox navigation buttons - fixed to viewport so they never shift the image */
+.lightbox-nav {
+  position: fixed;
+  top: 50%;
+  transform: translateY(-50%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text-light);
+  font-size: 2.5rem;
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.25s var(--ease-smooth);
+  z-index: 10005;
+  backdrop-filter: blur(8px);
+}
+
+.lightbox-nav:hover {
+  background: rgba(78, 203, 255, 0.16);
+  border-color: var(--brand);
+  color: var(--brand);
+  transform: translateY(-50%) scale(1.08);
+}
+
+.prev-btn {
+  left: 1.5rem;
+}
+
+.next-btn {
+  right: 1.5rem;
+}
+
+.lightbox-close {
+  position: fixed;
+  top: 1.5rem;
+  right: 1.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text-light);
+  font-size: 1.25rem;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.25s var(--ease-smooth);
+  z-index: 10005;
+  backdrop-filter: blur(8px);
+}
+
+.lightbox-close:hover {
+  background: rgba(255, 80, 50, 0.12);
+  border-color: #ffb09a;
+  color: #ffb09a;
+  transform: scale(1.08);
 }
 
 .about-story {
@@ -1451,6 +1599,11 @@ h6 {
   grid-template-columns: 1fr 1fr;
   gap: 2rem;
   align-items: center;
+}
+
+.about-text h2 {
+  margin-top: 0.5rem;
+  margin-bottom: 1.6rem;
 }
 
 .about-text p+p {
@@ -1469,6 +1622,16 @@ h6 {
   border-radius: 20px;
   border: 1px solid var(--border);
   background: rgba(255, 255, 255, 0.03);
+  transition:
+    transform 0.35s var(--ease-out),
+    border-color 0.35s var(--ease-smooth),
+    background 0.35s var(--ease-smooth);
+}
+
+.story-stat:hover {
+  transform: translateY(-3px);
+  border-color: var(--border-strong);
+  background: rgba(255, 255, 255, 0.05);
 }
 
 .story-stat strong {
@@ -1499,6 +1662,11 @@ h6 {
   width: 100%;
   min-height: 22rem;
   object-fit: cover;
+  transition: transform 0.6s var(--ease-out);
+}
+
+.about-image-frame:hover img {
+  transform: scale(1.04);
 }
 
 .about-highlight-card {
@@ -2540,16 +2708,37 @@ h6 {
   }
 
   .about-image-frame img {
-    min-height: 18rem;
+    min-height: auto;
+    aspect-ratio: 16 / 10;
   }
 
-  .gallery-lightbox {
-    padding: calc(1rem + var(--safe-top)) calc(1rem + var(--safe-right)) calc(1rem + var(--safe-bottom)) calc(1rem + var(--safe-left));
+  .lightbox-image-wrapper img {
+    max-width: 95vw;
+    max-height: 70vh;
+  }
+  
+  .lightbox-nav {
+    width: 48px;
+    height: 48px;
+    font-size: 2rem;
+  }
+  
+  .prev-btn {
+    left: 1rem;
+  }
+  
+  .next-btn {
+    right: 1rem;
+  }
+  
+  .lightbox-close {
+    top: 1.5rem;
+    right: 1.5rem;
   }
 
-  .gallery-lightbox .close-btn {
-    top: calc(0.8rem + var(--safe-top));
-    right: calc(0.8rem + var(--safe-right));
+  .lightbox-counter {
+    bottom: 1rem;
+    font-size: 0.78rem;
   }
 
   .admin-sidebar {
@@ -3135,4 +3324,66 @@ h6 {
 .contact-item:hover .contact-icon {
   transform: scale(1.15) rotate(5deg);
   color: var(--accent);
+}
+
+/* About Page Spacing, Rules & Regulations Styling */
+.about-rules-section {
+  padding-top: 2rem !important;
+}
+@media (max-width: 640px) {
+  .about-rules-section {
+    padding-top: 1.5rem !important;
+  }
+}
+
+.rules-box {
+  padding: 2.5rem;
+  background: rgba(10, 25, 44, 0.7);
+}
+
+@media (max-width: 640px) {
+  .rules-box {
+    padding: 1.5rem 1.25rem;
+  }
+}
+
+.rules-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem 2rem;
+}
+
+@media (max-width: 640px) {
+  .rules-grid {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+}
+
+.rule-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.rule-number {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  background: rgba(212, 175, 55, 0.1);
+  color: #d4af37;
+  border-radius: 50%;
+  font-weight: bold;
+  font-size: 0.9rem;
+  border: 1px solid rgba(212, 175, 55, 0.3);
+}
+
+.rule-text {
+  font-size: 0.95rem;
+  color: #cbd5e1;
+  line-height: 1.6;
+  padding-top: 4px;
 }

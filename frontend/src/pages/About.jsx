@@ -62,7 +62,6 @@ export default function About() {
           <div className="about-grid">
             <ScrollAnimation delay={100} className="about-text">
               <span className="section-label">Our Story</span>
-              <div style={{ height: '0.5rem' }}></div>
               <h2>A cleaner, calmer way to build a swimming habit.</h2>
               <p>Blue Waves was created for people who wanted more than a crowded pool. We built the space around water quality, structured timings, welcoming staff, and a facility that works for first-timers, children, families, and repeat swimmers.</p>
               <p>That same thinking shapes the full experience today: clear schedules, safer circulation areas, wellness programs that complement swim training, and a setting that feels premium without becoming intimidating.</p>
@@ -117,7 +116,7 @@ export default function About() {
         </div>
       </section>
       
-      <section className="section-space" style={{ paddingTop: '2rem' }}>
+      <section className="section-space about-rules-section">
         <div className="container">
           <ScrollAnimation>
             <div className="section-header section-header-center">
@@ -128,18 +127,14 @@ export default function About() {
           </ScrollAnimation>
           
           <ScrollAnimation delay={200}>
-            <div className="premium-box" style={{ padding: '2.5rem', background: 'rgba(10, 25, 44, 0.7)' }}>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.5rem 2rem' }}>
+            <div className="premium-box rules-box">
+              <div className="rules-grid">
                 {rules.map((rule, idx) => (
-                  <div key={idx} style={{ display: 'flex', alignItems: 'flex-start', gap: '1rem' }}>
-                    <div style={{
-                      display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
-                      width: '32px', height: '32px', background: 'rgba(212,175,55,0.1)', color: '#d4af37',
-                      borderRadius: '50%', fontWeight: 'bold', fontSize: '0.9rem', border: '1px solid rgba(212,175,55,0.3)'
-                    }}>
+                  <div key={idx} className="rule-item">
+                    <div className="rule-number">
                       {idx + 1}
                     </div>
-                    <div style={{ fontSize: '0.95rem', color: '#cbd5e1', lineHeight: '1.6', paddingTop: '4px' }}>
+                    <div className="rule-text">
                       {rule}
                     </div>
                   </div>

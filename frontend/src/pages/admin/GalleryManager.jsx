@@ -15,11 +15,63 @@ export default function GalleryManager() {
   const load = () => supabase.from('gallery').select('*').order('order_val').then(({ data }) => setImages(data || []))
   useEffect(() => { load() }, [])
 
+  const compressImage = (file, maxWidth = 1600, quality = 0.8) => {
+    return new Promise((resolve) => {
+      if (!file.type.startsWith('image/')) return resolve(file)
+      const reader = new FileReader()
+      reader.readAsDataURL(file)
+      reader.onload = (event) => {
+        const img = new Image()
+        img.src = event.target.result
+        img.onload = () => {
+          const canvas = document.createElement('canvas')
+          let width = img.width
+          let height = img.height
+
+          if (width > maxWidth || height > maxWidth) {
+            if (width > height) {
+              height = Math.round((height * maxWidth) / width)
+              width = maxWidth
+            } else {
+              width = Math.round((width * maxWidth) / height)
+              height = maxWidth
+            }
+          }
+
+          canvas.width = width
+          canvas.height = height
+
+          const ctx = canvas.getContext('2d')
+          ctx.drawImage(img, 0, 0, width, height)
+
+          canvas.toBlob((blob) => {
+            if (blob) {
+              const nameWithoutExt = file.name.substring(0, file.name.lastIndexOf('.')) || file.name
+              const compressedFile = new File([blob], `${nameWithoutExt}.jpg`, {
+                type: 'image/jpeg',
+                lastModified: Date.now()
+              })
+              resolve(compressedFile)
+            } else {
+              resolve(file)
+            }
+          }, 'image/jpeg', quality)
+        }
+        img.onerror = () => resolve(file)
+      }
+      reader.onerror = () => resolve(file)
+    })
+  }
+
   const upload = async () => {
     if (!file) return alert('Select a file')
     setUploading(true)
-    const fileName = Date.now() + '_' + file.name
-    const { error: upErr } = await supabase.storage.from('gallery').upload(fileName, file)
+    
+    // Compress the image client-side to reduce Supabase storage usage and load times
+    const uploadFile = await compressImage(file)
+    
+    const fileName = Date.now() + '_' + uploadFile.name
+    const { error: upErr } = await supabase.storage.from('gallery').upload(fileName, uploadFile)
     if (upErr) { alert('Upload failed: ' + upErr.message); setUploading(false); return }
     const { data: { publicUrl } } = supabase.storage.from('gallery').getPublicUrl(fileName)
     await supabase.from('gallery').insert([{ url: publicUrl, alt, category, order_val: Date.now() }])

@@ -11,11 +11,63 @@ export default function HeroSlidesManager() {
   const load = () => supabase.from('hero_slides').select('*').order('order_val').then(({ data }) => setSlides(data || []))
   useEffect(() => { load() }, [])
 
+  const compressImage = (file, maxWidth = 1920, quality = 0.82) => {
+    return new Promise((resolve) => {
+      if (!file.type.startsWith('image/')) return resolve(file)
+      const reader = new FileReader()
+      reader.readAsDataURL(file)
+      reader.onload = (event) => {
+        const img = new Image()
+        img.src = event.target.result
+        img.onload = () => {
+          const canvas = document.createElement('canvas')
+          let width = img.width
+          let height = img.height
+
+          if (width > maxWidth || height > maxWidth) {
+            if (width > height) {
+              height = Math.round((height * maxWidth) / width)
+              width = maxWidth
+            } else {
+              width = Math.round((width * maxWidth) / height)
+              height = maxWidth
+            }
+          }
+
+          canvas.width = width
+          canvas.height = height
+
+          const ctx = canvas.getContext('2d')
+          ctx.drawImage(img, 0, 0, width, height)
+
+          canvas.toBlob((blob) => {
+            if (blob) {
+              const nameWithoutExt = file.name.substring(0, file.name.lastIndexOf('.')) || file.name
+              const compressedFile = new File([blob], `${nameWithoutExt}.jpg`, {
+                type: 'image/jpeg',
+                lastModified: Date.now()
+              })
+              resolve(compressedFile)
+            } else {
+              resolve(file)
+            }
+          }, 'image/jpeg', quality)
+        }
+        img.onerror = () => resolve(file)
+      }
+      reader.onerror = () => resolve(file)
+    })
+  }
+
   const upload = async () => {
     if (!file) return alert('Select a file')
     setUploading(true)
-    const fileName = Date.now() + '_' + file.name
-    const { error: upErr } = await supabase.storage.from('hero-slides').upload(fileName, file)
+    
+    // Compress the hero slide image before upload
+    const uploadFile = await compressImage(file)
+    
+    const fileName = Date.now() + '_' + uploadFile.name
+    const { error: upErr } = await supabase.storage.from('hero-slides').upload(fileName, uploadFile)
     if (upErr) { alert('Upload failed: ' + upErr.message); setUploading(false); return }
     const { data: { publicUrl } } = supabase.storage.from('hero-slides').getPublicUrl(fileName)
     await supabase.from('hero_slides').insert([{ image_url: publicUrl, title, subtitle, order_val: Date.now() }])

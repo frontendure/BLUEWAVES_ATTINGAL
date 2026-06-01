@@ -13,6 +13,8 @@ export default defineConfig({
       renderer: new PuppeteerRenderer({
         // Wait 3 seconds for animations or data fetching to settle
         renderAfterTime: 3000,
+        // Required for sandbox environments on Netlify/CI build servers
+        args: ['--no-sandbox', '--disable-setuid-sandbox']
       }),
     })
   ],
