@@ -1,9 +1,10 @@
 import { Suspense, lazy } from 'react'
-import { Routes, Route } from 'react-router-dom'
+import { Routes, Route, useLocation } from 'react-router-dom'
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
 import PageTransition from './components/PageTransition'
 import ScrollToTop from './components/ScrollToTop'
+import AnnouncementBanner from './components/AnnouncementBanner'
 import Home from './pages/Home'
 import NotFound from './pages/NotFound'
 
@@ -39,9 +40,12 @@ function Layout({ children }) {
 }
 
 export default function App() {
+  const location = useLocation()
+
   return (
     <>
       <ScrollToTop />
+      {location.pathname === '/' && <AnnouncementBanner key="home-banner" />}
       <Routes>
         <Route path="/" element={<Layout><Home /></Layout>} />
         <Route path="/programs" element={<Layout><Programs /></Layout>} />
