@@ -60,7 +60,7 @@ export default function About() {
       <section className="section-space about-story">
         <div className="container">
           <div className="about-grid">
-            <ScrollAnimation delay={100} className="about-text">
+            <div className="about-text animate-on-load">
               <span className="section-label">Our Story</span>
               <h2>A cleaner, calmer way to build a swimming habit.</h2>
               <p>Blue Waves was created for people who wanted more than a crowded pool. We built the space around water quality, structured timings, welcoming staff, and a facility that works for first-timers, children, families, and repeat swimmers.</p>
@@ -79,8 +79,8 @@ export default function About() {
                   <span>Programs for beginners, families, and growing swimmers.</span>
                 </div>
               </div>
-            </ScrollAnimation>
-            <ScrollAnimation delay={200} className="about-visual">
+            </div>
+            <div className="about-visual animate-on-load-delayed">
               <div className="about-image-frame">
                 <img src="/assets/hero-optimized.jpg" alt="Blue Waves pool deck" loading="lazy" decoding="async" />
               </div>
@@ -89,7 +89,7 @@ export default function About() {
                 <h3>Comfort, clarity, and consistent coaching.</h3>
                 <p>Members should know exactly where to go, when to arrive, and what kind of session they are stepping into. That predictability is part of the premium experience.</p>
               </div>
-            </ScrollAnimation>
+            </div>
           </div>
         </div>
       </section>

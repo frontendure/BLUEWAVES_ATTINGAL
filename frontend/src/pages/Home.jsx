@@ -204,7 +204,7 @@ export default function Home() {
       <AnnouncementBanner />
       <section className="hero-section">
         <div className="container hero-grid">
-          <ScrollAnimation className="hero-left">
+          <div className="hero-left">
             <div className="hero-copy-top">
               <span className="hero-subtitle">Premium Aquatic Club</span>
               <span className="hero-chip">Attingal, Kerala</span>
@@ -224,8 +224,8 @@ export default function Home() {
                 <div key={point} className="hero-metric">{point}</div>
               ))}
             </div>
-          </ScrollAnimation>
-          <ScrollAnimation delay={200} className="hero-right">
+          </div>
+          <div className="hero-right">
             <div className="hero-visual">
               <HeroSlideshow />
               <div className="hero-badge hero-badge-top">Clean water system • safer deck flow</div>
@@ -234,7 +234,7 @@ export default function Home() {
                 <span>Swimming, yoga, and zumba schedules built for consistency.</span>
               </div>
             </div>
-          </ScrollAnimation>
+          </div>
         </div>
       </section>
 
