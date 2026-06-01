@@ -172,7 +172,8 @@ function AnnouncementBanner() {
     return () => { active = false }
   }, [])
 
-  const handleClose = () => {
+  const handleClose = (e) => {
+    e.stopPropagation()
     setIsVisible(false)
   }
 
@@ -180,7 +181,7 @@ function AnnouncementBanner() {
 
   return createPortal(
     <div className="home-announcement-banner">
-      <button className="banner-close-btn" onClick={handleClose} aria-label="Close announcement">
+      <button type="button" className="banner-close-btn" onClick={handleClose} aria-label="Close announcement">
         ✕
       </button>
       <div className="announcement-content">
