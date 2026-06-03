@@ -217,7 +217,7 @@ export default function Home() {
           </ScrollAnimation>
           <ScrollAnimation delay={100} animation="fade-up">
             <div className="why-text-grid">
-              <p>Blue Waves is a premium facility designed to provide a high-performance aquatic program. Our center features a state-of-the-art racing pool, a dedicated warm-up pool, and a safe toddler pool, ensuring a comprehensive swimming experience for all ages and skill levels.</p>
+              <p>Blue Waves is a premium facility designed to provide a high-performance aquatic program. Our center features a state-of-the-art  pool, a dedicated  toddler pool, ensuring a comprehensive swimming experience for all ages and skill levels.</p>
               <p>The amalgamation of premium infrastructure, superior coaching, and modern techniques makes Blue Waves your one-stop destination to learn swimming and imbibe it as a culture in your daily routine. We strive to establish ourselves as a premier aquatic centre of excellence.</p>
             </div>
           </ScrollAnimation>
