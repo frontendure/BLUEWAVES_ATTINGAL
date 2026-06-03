@@ -60,9 +60,6 @@ export default function Programs() {
 
   return (
     <>
-      <section className="page-header">
-        <div className="container"><h1>Our Curated Programs</h1><p>Expertly designed aquatic experiences tailored to elevate your technique, endurance, and wellness.</p></div>
-      </section>
       <section className="section-space">
         <div className="container">
           <ScrollAnimation animation="scale-up">

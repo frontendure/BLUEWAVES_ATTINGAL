@@ -13,6 +13,7 @@ const Membership = lazy(() => import('./pages/Membership'))
 const Gallery = lazy(() => import('./pages/Gallery'))
 const About = lazy(() => import('./pages/About'))
 const Contact = lazy(() => import('./pages/Contact'))
+const FeatureDetail = lazy(() => import('./pages/FeatureDetail'))
 const AdminLogin = lazy(() => import('./pages/admin/AdminLogin'))
 const AdminDashboard = lazy(() => import('./pages/admin/AdminDashboard'))
 
@@ -53,6 +54,10 @@ export default function App() {
         <Route path="/gallery" element={<Layout><Gallery /></Layout>} />
         <Route path="/about" element={<Layout><About /></Layout>} />
         <Route path="/contact" element={<Layout><Contact /></Layout>} />
+        <Route path="/swimming-pool" element={<Layout><FeatureDetail featureKey="swimming-pool" /></Layout>} />
+        <Route path="/yoga" element={<Layout><FeatureDetail featureKey="yoga" /></Layout>} />
+        <Route path="/zumba" element={<Layout><FeatureDetail featureKey="zumba" /></Layout>} />
+        <Route path="/mini-hall" element={<Layout><FeatureDetail featureKey="mini-hall" /></Layout>} />
         <Route path="/admin" element={<Suspense fallback={<RouteLoader fullscreen />}><AdminLogin /></Suspense>} />
         <Route path="/admin/dashboard" element={<Suspense fallback={<RouteLoader fullscreen />}><AdminDashboard /></Suspense>} />
         <Route path="*" element={<Layout><NotFound /></Layout>} />
@@ -60,3 +65,4 @@ export default function App() {
     </>
   )
 }
+

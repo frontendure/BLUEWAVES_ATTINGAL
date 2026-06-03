@@ -21,9 +21,6 @@ export default function Contact() {
 
   return (
     <>
-      <section className="page-header">
-        <div className="container"><h1>Connect With Us</h1><p>Our concierge team is available to assist you with membership inquiries, private bookings, and facility tours.</p></div>
-      </section>
       <section className="section-space about-story">
         <div className="container">
           <div className="contact-grid">

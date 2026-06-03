@@ -744,7 +744,7 @@ h6 {
 }
 
 .feature-cards-grid {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 1.25rem;
 }
 
@@ -923,6 +923,22 @@ h6 {
   height: 2px;
   margin-top: 1rem;
   background: linear-gradient(90deg, transparent, var(--brand), transparent);
+}
+
+.page-transition-content > section:first-child {
+  padding-top: 11rem;
+}
+
+@media (max-width: 860px) {
+  .page-transition-content > section:first-child {
+    padding-top: 9.5rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .page-transition-content > section:first-child {
+    padding-top: 8.5rem;
+  }
 }
 
 .page-header {
@@ -3435,4 +3451,539 @@ h6 {
   color: #cbd5e1;
   line-height: 1.6;
   padding-top: 4px;
+}
+
+/* ────────────────────────────────────────────────────────
+   Feature Card Styles
+──────────────────────────────────────────────────────── */
+
+.feature-card {
+  display: flex !important;
+  flex-direction: column;
+  padding: 0 !important;
+  overflow: hidden;
+  height: 100%;
+}
+
+.feature-card-image-container {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  position: relative;
+  overflow: hidden;
+  background: var(--surface-soft);
+}
+
+.feature-card-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s var(--ease-out);
+}
+
+.feature-card:hover .feature-card-img {
+  transform: scale(1.06);
+}
+
+.feature-card-placeholder-gradient {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(31, 111, 166, 0.28), rgba(78, 203, 255, 0.08));
+}
+
+.feature-card-icon-wrapper {
+  position: absolute;
+  bottom: 0;
+  left: 1.75rem;
+  transform: translateY(50%);
+  z-index: 5;
+}
+
+.feature-card-body {
+  padding: 2.25rem 1.7rem 1.75rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+  flex-grow: 1;
+}
+
+.feature-card-body h5 {
+  margin-bottom: 0.6rem;
+  font-size: 1.35rem;
+  color: var(--text-light);
+  font-family: var(--font-display);
+}
+
+.feature-card-body p {
+  color: var(--text-muted);
+  font-size: 0.93rem;
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+}
+
+.feature-card-more {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: auto;
+  color: var(--brand);
+  font-size: 0.88rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.more-arrow {
+  transition: transform 0.3s var(--ease-smooth);
+}
+
+.feature-card:hover .feature-card-more {
+  color: var(--text-light);
+}
+
+.feature-card:hover .more-arrow {
+  transform: translateX(4px);
+}
+
+/* ────────────────────────────────────────────────────────
+   FeatureDetail.jsx - Detail Pages Styling
+──────────────────────────────────────────────────────── */
+
+.detail-breadcrumbs {
+  padding: 8.5rem 0 1rem;
+  font-size: 0.88rem;
+  color: var(--text-muted);
+}
+
+.detail-breadcrumbs a {
+  transition: color 0.25s ease;
+}
+
+.detail-breadcrumbs a:hover {
+  color: var(--brand);
+}
+
+.crumb-separator {
+  margin: 0 0.5rem;
+  color: var(--text-soft);
+}
+
+.crumb-current {
+  color: var(--text-light);
+  font-weight: 500;
+}
+
+.detail-hero {
+  position: relative;
+  min-height: 280px;
+  padding: 4.5rem 0;
+  display: flex;
+  align-items: center;
+  background: linear-gradient(135deg, rgba(8, 28, 44, 0.95), rgba(4, 16, 28, 0.98));
+  border-bottom: 1px solid var(--border);
+  overflow: hidden;
+  border-radius: var(--radius);
+  margin: 0 auto;
+  width: min(1240px, calc(100% - 32px));
+}
+
+.detail-hero-backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  opacity: 0.15;
+  filter: blur(28px);
+}
+
+.detail-hero-backdrop img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.detail-hero-content {
+  position: relative;
+  z-index: 5;
+}
+
+.detail-hero-label {
+  display: block;
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  color: var(--brand);
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+}
+
+.detail-hero-title {
+  font-size: clamp(2.2rem, 5.5vw, 3.8rem);
+  line-height: 1.1;
+  margin-bottom: 0.8rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--text-light);
+}
+
+.detail-hero-subtitle {
+  max-width: 44rem;
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: var(--text-muted);
+  margin-bottom: 1.8rem;
+}
+
+.detail-hero-ctas {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+/* Info Grid Layout */
+.detail-info-grid {
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: 3.5rem;
+}
+
+.detail-section-title {
+  font-size: 1.85rem;
+  margin-bottom: 1.1rem;
+  letter-spacing: -0.01em;
+}
+
+.detail-section-subtitle {
+  font-size: 1.45rem;
+  margin-bottom: 1.25rem;
+}
+
+.detail-description-text {
+  font-size: 1.05rem;
+  line-height: 1.85;
+  color: var(--text-muted);
+}
+
+.detail-highlights-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.5rem;
+}
+
+.detail-highlight-card {
+  display: flex;
+  gap: 1rem;
+  padding: 1.5rem;
+  border-radius: var(--radius-sm);
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--border);
+  transition: border-color 0.3s ease, transform 0.3s ease;
+}
+
+.detail-highlight-card:hover {
+  border-color: rgba(78, 203, 255, 0.35);
+  transform: translateY(-2px);
+}
+
+.detail-highlight-icon {
+  width: 2.75rem;
+  height: 2.75rem;
+  font-size: 0.95rem;
+  border: 1px solid rgba(78, 203, 255, 0.16);
+  border-radius: 12px;
+  background: rgba(78, 203, 255, 0.06);
+  color: var(--brand);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.detail-highlight-card h5 {
+  font-size: 1.05rem;
+  margin-bottom: 0.35rem;
+  color: var(--text-light);
+}
+
+.detail-highlight-card p {
+  font-size: 0.88rem;
+  color: var(--text-soft);
+  line-height: 1.5;
+}
+
+/* Side Panels */
+.detail-card {
+  padding: 2.2rem 1.8rem;
+  border-radius: var(--radius);
+}
+
+.detail-card-title {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  margin-bottom: 1.5rem;
+  font-size: 1.25rem;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 0.75rem;
+}
+
+.detail-timing-list,
+.detail-fee-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.detail-timing-row,
+.detail-fee-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.6rem 0;
+  border-bottom: 1px dashed rgba(255, 255, 255, 0.06);
+  font-size: 0.92rem;
+}
+
+.detail-timing-row:last-child,
+.detail-fee-row:last-child {
+  border-bottom: 0;
+}
+
+.detail-timing-time,
+.detail-fee-name {
+  color: var(--text-muted);
+}
+
+.detail-timing-badge {
+  padding: 0.3rem 0.65rem;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.detail-fee-price {
+  font-weight: 700;
+  color: var(--text-light);
+  text-align: right;
+}
+
+.detail-fee-price small {
+  display: block;
+  font-size: 0.72rem;
+  font-weight: 400;
+  color: var(--text-soft);
+  margin-top: 0.1rem;
+}
+
+.detail-fee-row.highlight .detail-fee-price {
+  color: var(--accent);
+}
+
+.detail-fee-row.accent .detail-fee-price {
+  color: var(--brand);
+}
+
+.detail-card-note {
+  font-size: 0.8rem;
+  color: var(--text-soft);
+  line-height: 1.5;
+  margin-top: 1.2rem;
+}
+
+.detail-custom-fees {
+  font-size: 0.95rem;
+  line-height: 1.7;
+  color: var(--text-muted);
+}
+
+/* Detail Gallery Section */
+.detail-gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.detail-gallery-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 0;
+}
+
+/* CTA Banner Box */
+.detail-cta-box {
+  background: linear-gradient(135deg, rgba(78, 203, 255, 0.08), rgba(18, 153, 216, 0.02)), rgba(8, 28, 44, 0.6);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius);
+  padding: 3.5rem 2.5rem;
+  text-align: center;
+  max-width: 48rem;
+  margin: 0 auto;
+}
+
+.detail-cta-box h3 {
+  font-size: 2rem;
+  margin-bottom: 0.8rem;
+}
+
+.detail-cta-box p {
+  color: var(--text-muted);
+  line-height: 1.7;
+  margin-bottom: 2rem;
+  font-size: 1.02rem;
+}
+
+.detail-cta-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 1.2rem;
+  flex-wrap: wrap;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1080px) {
+  .detail-info-grid {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+}
+
+@media (max-width: 860px) {
+  .detail-breadcrumbs {
+    padding-top: 7.5rem;
+  }
+  .detail-hero {
+    width: 100%;
+    border-radius: 0;
+  }
+  .detail-gallery-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .detail-highlights-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  .detail-gallery-grid {
+    grid-template-columns: 1fr;
+  }
+  .detail-cta-box {
+    padding: 2.2rem 1.5rem;
+  }
+  .detail-cta-buttons {
+    flex-direction: column;
+  }
+  .detail-cta-buttons a,
+  .detail-cta-buttons button {
+    width: 100%;
+  }
+}
+
+/* ────────────────────────────────────────────────────────
+   Membership 2x2 Grid & Highlighted Pass Card
+──────────────────────────────────────────────────────── */
+
+.membership-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: 1.5rem !important;
+  align-items: start !important;
+}
+
+.membership-column {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.membership-box.highlighted-card {
+  position: relative;
+  border: 1px solid rgba(78, 203, 255, 0.4) !important;
+  background: linear-gradient(180deg, rgba(78, 203, 255, 0.08), rgba(78, 203, 255, 0.02)), rgba(7, 24, 38, 0.9) !important;
+  box-shadow: 0 20px 50px rgba(78, 203, 255, 0.12) !important;
+}
+
+.membership-box.highlighted-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 50%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--brand), transparent);
+}
+
+.card-accent-badge {
+  position: absolute;
+  top: 1.15rem;
+  right: 1.25rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--brand);
+  background: rgba(78, 203, 255, 0.12);
+  padding: 0.25rem 0.6rem;
+  border-radius: 999px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border: 1px solid rgba(78, 203, 255, 0.2);
+}
+
+.public-pass-details {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 0.75rem 0 0.25rem;
+  height: 100%;
+}
+
+.public-pass-price-box {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  margin-bottom: 0.5rem;
+  margin-top: 0.25rem;
+}
+
+.public-pass-price-box .price-value {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--text-light);
+  line-height: 1;
+  font-family: var(--font-display);
+}
+
+.public-pass-price-box .price-unit {
+  font-size: 0.9rem;
+  color: var(--text-soft);
+  margin-left: 0.25rem;
+}
+
+.public-pass-note {
+  font-size: 0.8rem;
+  color: var(--accent);
+  margin-top: -0.25rem;
+  margin-bottom: 0.75rem;
+  font-weight: 600;
+}
+
+.public-pass-desc {
+  font-size: 0.88rem;
+  line-height: 1.5;
+  color: var(--text-muted);
+}
+
+@media (max-width: 768px) {
+  .membership-grid {
+    grid-template-columns: 1fr !important;
+    gap: 1.25rem !important;
+  }
+  .membership-column {
+    gap: 1.25rem;
+  }
 }

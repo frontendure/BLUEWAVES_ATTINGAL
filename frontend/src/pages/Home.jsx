@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
+import { supabase } from '../lib/supabase'
 import { IconBadge, siteIcons } from '../components/SiteIcon'
 import ScrollAnimation from '../components/ScrollAnimation'
 
@@ -74,9 +75,38 @@ function HeroSlideshow() {
 }
 
 const features = [
-  { icon: siteIcons.pool, title: 'Swimming Pool', desc: 'Dive into our state-of-the-art pool with expert coaching for all ages and skill levels — from beginners to competitive swimmers.' },
-  { icon: siteIcons.yoga, title: 'Yoga', desc: 'Find your balance with guided yoga sessions designed to improve flexibility, strength, and mental well-being in a peaceful setting.' },
-  { icon: siteIcons.zumba, title: 'Zumba', desc: 'Get moving with high-energy Zumba classes that combine dance, music, and fitness into a fun, calorie-burning workout for everyone.' },
+  {
+    key: 'swimming-pool',
+    icon: siteIcons.pool,
+    title: 'Swimming Pool',
+    desc: 'Dive into our state-of-the-art pool with expert coaching for all ages and skill levels — from beginners to competitive swimmers.',
+    path: '/swimming-pool',
+    category: 'pool-area'
+  },
+  {
+    key: 'yoga',
+    icon: siteIcons.yoga,
+    title: 'Yoga',
+    desc: 'Find your balance with guided yoga sessions designed to improve flexibility, strength, and mental well-being in a peaceful setting.',
+    path: '/yoga',
+    category: 'yoga'
+  },
+  {
+    key: 'zumba',
+    icon: siteIcons.zumba,
+    title: 'Zumba',
+    desc: 'Get moving with high-energy Zumba classes that combine dance, music, and fitness into a fun, calorie-burning workout for everyone.',
+    path: '/zumba',
+    category: 'zumba'
+  },
+  {
+    key: 'mini-hall',
+    icon: siteIcons.facilities,
+    title: 'Mini Hall',
+    desc: 'Spacious mini hall with 250–300 seating capacity for functions, celebrations, workshops, meetings, and programs.',
+    path: '/mini-hall',
+    category: 'mini-hall'
+  }
 ]
 
 const facilities = [
@@ -152,6 +182,37 @@ function ScheduleBoard() {
   )
 }
 export default function Home() {
+  const [featureImages, setFeatureImages] = useState({})
+
+  useEffect(() => {
+    let active = true
+
+    supabase.from('gallery').select('*').order('order_val')
+      .then(({ data }) => {
+        if (!active || !data?.length) return
+        
+        const mapping = {}
+        const targetCategories = ['pool-area', 'yoga', 'zumba', 'mini-hall']
+        
+        targetCategories.forEach(cat => {
+          const catImages = data.filter(img => img.category === cat)
+          if (catImages.length > 0) {
+            const sorted = [...catImages].sort((a, b) => (b.order_val || 0) - (a.order_val || 0))
+            mapping[cat] = sorted[0].url
+          }
+        })
+        
+        setFeatureImages(mapping)
+      })
+      .catch(() => {
+        // Fallback quietly
+      })
+
+    return () => {
+      active = false
+    }
+  }, [])
+
   return (
     <>
       <section className="hero-section">
@@ -193,15 +254,42 @@ export default function Home() {
       <section className="feature-cards-section">
         <div className="container">
           <div className="feature-cards-grid">
-            {features.map((f, i) => (
-              <ScrollAnimation key={f.title} delay={i * 100}>
-                <div className="feature-card">
-                  <IconBadge icon={f.icon} className="feature-icon" />
-                  <h5>{f.title}</h5>
-                  <p>{f.desc}</p>
-                </div>
-              </ScrollAnimation>
-            ))}
+            {features.map((f, i) => {
+              const bgImage = featureImages[f.category]
+              return (
+                <ScrollAnimation key={f.title} delay={i * 100}>
+                  <Link to={f.path} className="feature-card hover-lift">
+                    <div className="feature-card-image-container">
+                      {bgImage ? (
+                        <img 
+                          src={bgImage} 
+                          alt={f.title} 
+                          className="feature-card-img" 
+                          loading="lazy" 
+                          decoding="async" 
+                        />
+                      ) : (
+                        <div className="feature-card-placeholder-gradient" />
+                      )}
+                      <div className="feature-card-icon-wrapper">
+                        <IconBadge icon={f.icon} className="feature-icon" />
+                      </div>
+                    </div>
+                    <div className="feature-card-body">
+                      <h5>{f.title}</h5>
+                      <p>{f.desc}</p>
+                      <span className="feature-card-more">
+                        Explore Program
+                        <svg className="more-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                          <line x1="5" y1="12" x2="19" y2="12"></line>
+                          <polyline points="12 5 19 12 12 19"></polyline>
+                        </svg>
+                      </span>
+                    </div>
+                  </Link>
+                </ScrollAnimation>
+              )
+            })}
           </div>
         </div>
       </section>

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { supabase } from '../../lib/supabase'
 
-const cats = ['facilities', 'pool-area', 'training', 'swimmers-coaches', 'general']
+const cats = ['pool-area', 'zumba', 'yoga', 'mini-hall', 'general']
 
 export default function GalleryManager() {
   const [images, setImages] = useState([])
@@ -78,9 +78,21 @@ export default function GalleryManager() {
     setFile(null); setAlt(''); setUploading(false); load()
   }
 
-  const remove = async (id) => {
+  const remove = async (img) => {
     if (!confirm('Delete?')) return
-    await supabase.from('gallery').delete().eq('id', id)
+    
+    // Delete physical file from Supabase storage
+    try {
+      const parts = img.url.split('/storage/v1/object/public/gallery/')
+      if (parts.length > 1) {
+        const fileName = decodeURIComponent(parts[1])
+        await supabase.storage.from('gallery').remove([fileName])
+      }
+    } catch (err) {
+      console.error('Error removing file from storage:', err)
+    }
+
+    await supabase.from('gallery').delete().eq('id', img.id)
     load()
   }
 
@@ -96,7 +108,19 @@ export default function GalleryManager() {
   }
 
   const clearGallery = async () => {
-    if (!confirm('This will delete all image records from the database. The physical files will remain in storage but won\'t show on the site. Continue?')) return
+    if (!confirm('This will delete all image records from the database and their physical files from storage. Continue?')) return
+    
+    // Clear all files in the storage bucket
+    try {
+      const { data: fileList } = await supabase.storage.from('gallery').list()
+      if (fileList && fileList.length > 0) {
+        const fileNames = fileList.map(f => f.name)
+        await supabase.storage.from('gallery').remove(fileNames)
+      }
+    } catch (err) {
+      console.error('Error clearing storage:', err)
+    }
+
     await supabase.from('gallery').delete().neq('id', 0)
     load()
   }
@@ -143,7 +167,7 @@ export default function GalleryManager() {
                   </div>
                   <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.5rem' }}>
                     <button onClick={() => startEdit(img)} className="btn-brand" style={{ background: '#4CAF50', padding: '0.2rem 0.5rem', fontSize: '0.8rem' }}>Edit</button>
-                    <button onClick={() => remove(img.id)} className="btn-delete" style={{ padding: '0.2rem 0.5rem', fontSize: '0.8rem' }}>Delete</button>
+                    <button onClick={() => remove(img)} className="btn-delete" style={{ padding: '0.2rem 0.5rem', fontSize: '0.8rem' }}>Delete</button>
                   </div>
                 </div>
               )}

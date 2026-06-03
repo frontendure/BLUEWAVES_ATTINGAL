@@ -6,10 +6,10 @@ import ScrollAnimation from '../components/ScrollAnimation'
 
 
 const categories = [
-  { key: 'facilities', icon: siteIcons.facilities, label: 'Facilities' },
   { key: 'pool-area', icon: siteIcons.pool, label: 'Pool Area' },
-  { key: 'training', icon: siteIcons.training, label: 'Training' },
-  { key: 'swimmers-coaches', icon: siteIcons.spectators, label: 'Swimmers & Coaches' },
+  { key: 'zumba', icon: siteIcons.zumba, label: 'Zumba' },
+  { key: 'yoga', icon: siteIcons.yoga, label: 'Yoga' },
+  { key: 'mini-hall', icon: siteIcons.facilities, label: 'Mini Hall' },
 ]
 
 /* ── Supabase image transform helpers ── */
@@ -120,10 +120,11 @@ export default function Gallery() {
 
   const grouped = categories.map(c => ({
     ...c,
-    items: images.filter(img => (img.category || 'general') === c.key)
+    items: images.filter(img => img.category === c.key)
   }))
 
-  const allGeneral = images.filter(img => !img.category || img.category === 'general')
+  const standardKeys = categories.map(c => c.key)
+  const allGeneral = images.filter(img => !img.category || img.category === 'general' || !standardKeys.includes(img.category))
 
   // Collect all displayed images in the order they appear on the screen
   const displayedImages = [
@@ -177,9 +178,6 @@ export default function Gallery() {
 
   return (
     <>
-      <section className="page-header">
-        <div className="container"><h1>Our Gallery</h1><p>A visual tour of our state-of-the-art facilities, pool area, training sessions, and the people who make Blue Waves special.</p></div>
-      </section>
       <section className="section-space">
         <div className="container">
           {grouped.map((cat, i) => (

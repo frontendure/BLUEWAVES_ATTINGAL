@@ -5,7 +5,6 @@ const cats = [
   { key: 'swimming_coaching', label: 'Swimming (With Coaching)' },
   { key: 'swimming_public', label: 'Swimming (Without Coaching)' },
   { key: 'wellness', label: 'Wellness Classes' },
-  { key: 'special', label: 'Special Passes' },
 ]
 
 const defaultMemberships = [
@@ -22,8 +21,7 @@ const defaultMemberships = [
   { category: 'swimming_public', name: 'Family Package (4 Members)', price: '₹7,500', note: '' },
   { category: 'swimming_public', name: 'Public Pass (1 Hour)', price: '₹150', note: '' },
   { category: 'wellness', name: 'Zumba (Monthly)', price: '₹1,500', note: '(+₹500 Adm)' },
-  { category: 'wellness', name: 'Yoga (Monthly)', price: '₹1,200', note: '(+₹500 Adm)' },
-  { category: 'special', name: 'Student Pass', price: '₹100', note: 'Applicable for Std 8 to 12. Valid school ID required.' }
+  { category: 'wellness', name: 'Yoga (Monthly)', price: '₹1,200', note: '(+₹500 Adm)' }
 ]
 
 export default function MembershipFeesManager() {

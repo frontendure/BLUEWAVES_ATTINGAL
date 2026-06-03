@@ -54,9 +54,6 @@ const rules = [
 export default function About() {
   return (
     <>
-      <section className="page-header">
-        <div className="container"><h1>Our Philosophy</h1><p>Premium aquatic training should feel clean, calm, and easy to return to week after week.</p></div>
-      </section>
       <section className="section-space about-story">
         <div className="container">
           <div className="about-grid">
