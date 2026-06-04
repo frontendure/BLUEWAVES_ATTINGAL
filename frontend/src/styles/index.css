@@ -3937,6 +3937,69 @@ h6 {
   .detail-cta-buttons button {
     width: 100%;
   }
+
+  /* ── Flip card mobile fixes ── */
+  .flip-card-container {
+    perspective: 800px;
+  }
+
+  .detail-card {
+    padding: 1.4rem 1.1rem;
+  }
+
+  .detail-card-title {
+    font-size: 1.08rem;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    padding-bottom: 0.6rem;
+  }
+
+  .detail-timing-list,
+  .detail-fee-list {
+    gap: 0.4rem;
+  }
+
+  .detail-timing-row,
+  .detail-fee-row {
+    gap: 0.4rem;
+    padding: 0.45rem 0;
+    font-size: 0.8rem;
+  }
+
+  .detail-timing-time,
+  .detail-fee-name {
+    font-size: 0.8rem;
+    min-width: 0;
+  }
+
+  .detail-timing-badge {
+    padding: 0.22rem 0.5rem;
+    font-size: 0.68rem;
+  }
+
+  .detail-fee-price {
+    font-size: 0.82rem;
+  }
+
+  .detail-fee-price small {
+    font-size: 0.65rem;
+  }
+
+  .detail-card-note {
+    font-size: 0.75rem;
+    margin-top: 0.8rem;
+  }
+
+  .flip-indicator {
+    padding-top: 1rem;
+    font-size: 0.78rem;
+    gap: 0.35rem;
+  }
+
+  .flip-indicator svg {
+    width: 14px;
+    height: 14px;
+  }
 }
 
 /* ────────────────────────────────────────────────────────
