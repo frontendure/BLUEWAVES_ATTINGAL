@@ -2717,6 +2717,29 @@ h6 {
     padding-left: 0.8rem;
   }
 
+  .timing-row {
+    gap: 0.5rem;
+    padding: 0.65rem 0;
+  }
+
+  .timing-time {
+    font-size: 0.82rem;
+  }
+
+  .timing-badge {
+    padding: 0.3rem 0.6rem;
+    font-size: 0.7rem;
+  }
+
+  .wellness-time-row {
+    gap: 0.5rem;
+  }
+
+  .wellness-time-value {
+    padding: 0.35rem 0.6rem;
+    font-size: 0.78rem;
+  }
+
   .form-row {
     grid-template-columns: 1fr;
   }
