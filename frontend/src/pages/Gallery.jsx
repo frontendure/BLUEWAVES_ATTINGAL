@@ -95,6 +95,137 @@ function useLightboxPreload(images, currentIndex) {
   }, [currentIndex, images])
 }
 
+/* ── Category Carousel Component ── */
+
+const CategoryCarousel = ({ items, label, openLightbox }) => {
+  const [currentIndex, setCurrentIndex] = useState(0)
+  const [itemsPerView, setItemsPerView] = useState(3)
+  const [isHovered, setIsHovered] = useState(false)
+  const [isExpanded, setIsExpanded] = useState(false)
+  const [isTransitioning, setIsTransitioning] = useState(false)
+  
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 768) setItemsPerView(1)
+      else if (window.innerWidth < 1024) setItemsPerView(2)
+      else setItemsPerView(3)
+    }
+    handleResize()
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
+
+  const total = items.length
+  const isCarouselable = total > itemsPerView
+
+  const nextSlide = useCallback(() => {
+    if (!isCarouselable || currentIndex >= total) return
+    setIsTransitioning(true)
+    setCurrentIndex(prev => prev + 1)
+  }, [isCarouselable, currentIndex, total])
+
+  const prevSlide = useCallback(() => {
+    if (!isCarouselable || currentIndex <= -1) return
+    setIsTransitioning(true)
+    setCurrentIndex(prev => prev - 1)
+  }, [isCarouselable, currentIndex])
+
+  useEffect(() => {
+    if (isExpanded || !isCarouselable) return
+    let timer
+    if (!isHovered) {
+      timer = setInterval(nextSlide, 5000)
+    }
+    return () => clearInterval(timer)
+  }, [isHovered, isExpanded, nextSlide, isCarouselable])
+
+  useEffect(() => {
+    if (!isTransitioning) return
+    
+    if (currentIndex >= total) {
+      const timeout = setTimeout(() => {
+        setIsTransitioning(false)
+        setCurrentIndex(0)
+      }, 500)
+      return () => clearTimeout(timeout)
+    }
+    
+    if (currentIndex <= -1) {
+      const timeout = setTimeout(() => {
+        setIsTransitioning(false)
+        setCurrentIndex(total - 1)
+      }, 500)
+      return () => clearTimeout(timeout)
+    }
+  }, [currentIndex, total, isTransitioning])
+
+  if (total === 0) {
+    return <div className="gallery-placeholder-msg">No images uploaded yet for this category.</div>
+  }
+
+  if (isExpanded || !isCarouselable) {
+    return (
+      <div className="gallery-expanded-view">
+        <div className="gallery-grid">
+          {items.map(img => (
+            <GalleryImage key={img.id} src={img.url} alt={img.alt || label} onClick={() => openLightbox(img.id)} />
+          ))}
+        </div>
+        {isCarouselable && (
+          <div className="gallery-show-more">
+            <button className="btn-modern-outline" onClick={() => setIsExpanded(false)}>Show Less</button>
+          </div>
+        )}
+      </div>
+    )
+  }
+
+  const leftClones = items.slice(-itemsPerView).map(item => ({ ...item, cloneId: `lc-${item.id}` }))
+  const rightClones = items.slice(0, itemsPerView).map(item => ({ ...item, cloneId: `rc-${item.id}` }))
+  const trackItems = [...leftClones, ...items, ...rightClones]
+
+  const translateX = -(currentIndex + itemsPerView) * (100 / itemsPerView)
+  
+  return (
+    <div className="gallery-carousel-wrapper" 
+         onMouseEnter={() => setIsHovered(true)} 
+         onMouseLeave={() => setIsHovered(false)}
+         onTouchStart={() => setIsHovered(true)}
+         onTouchEnd={() => setIsHovered(false)}>
+      
+      <button className="carousel-nav prev" onClick={prevSlide} aria-label="Previous image">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6" /></svg>
+      </button>
+
+      <div className="carousel-track-container">
+        <div 
+          className="carousel-track" 
+          style={{
+            transform: `translateX(${translateX}%)`,
+            transition: isTransitioning ? 'transform 0.5s ease-in-out' : 'none',
+          }}
+        >
+          {trackItems.map((item) => (
+            <div className="carousel-slide" key={item.cloneId || item.id} style={{ flex: `0 0 ${100 / itemsPerView}%` }}>
+              <div style={{ padding: '0 10px', height: '100%', boxSizing: 'border-box' }}>
+                <GalleryImage src={item.url} alt={item.alt || label} onClick={() => openLightbox(item.id)} />
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <button className="carousel-nav next" onClick={nextSlide} aria-label="Next image">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6" /></svg>
+      </button>
+
+      <div className="gallery-show-more">
+        <button className="btn-modern-outline" onClick={() => setIsExpanded(true)}>Show More</button>
+      </div>
+    </div>
+  )
+}
+
 export default function Gallery() {
   const [images, setImages] = useState([])
   const [lightboxIndex, setLightboxIndex] = useState(null)
@@ -186,33 +317,13 @@ export default function Gallery() {
                 <IconBadge icon={cat.icon} className="gallery-cat-icon" />
                 <h2>{cat.label}</h2>
               </div>
-              <div className="gallery-grid">
-                {cat.items.length > 0 ? cat.items.map(img => (
-                  <GalleryImage
-                    key={img.id}
-                    src={img.url}
-                    alt={img.alt || cat.label}
-                    onClick={() => openLightbox(img.id)}
-                  />
-                )) : (
-                  <div className="gallery-placeholder-msg">No images uploaded yet for this category.</div>
-                )}
-              </div>
+              <CategoryCarousel items={cat.items} label={cat.label} openLightbox={openLightbox} />
             </ScrollAnimation>
           ))}
           {allGeneral.length > 0 && (
             <ScrollAnimation className="gallery-category" delay={grouped.length * 100} animation="scale-up">
               <div className="gallery-category-header"><IconBadge icon={siteIcons.general} className="gallery-cat-icon" /><h2>General</h2></div>
-              <div className="gallery-grid">
-                {allGeneral.map(img => (
-                  <GalleryImage
-                    key={img.id}
-                    src={img.url}
-                    alt={img.alt || 'Gallery'}
-                    onClick={() => openLightbox(img.id)}
-                  />
-                ))}
-              </div>
+              <CategoryCarousel items={allGeneral} label="General" openLightbox={openLightbox} />
             </ScrollAnimation>
           )}
         </div>

@@ -76,6 +76,229 @@ function useLightboxPreload(images, currentIndex) {
   }, [currentIndex, images])
 }
 
+/* ── Feature Detail Gallery Carousel (Gallery-page style) ── */
+const FeatureGalleryCarousel = ({ images, openLightbox }) => {
+  const [currentIndex, setCurrentIndex] = useState(0)
+  const [itemsPerView, setItemsPerView] = useState(3)
+  const [isHovered, setIsHovered] = useState(false)
+  const [isExpanded, setIsExpanded] = useState(false)
+  const [isTransitioning, setIsTransitioning] = useState(false)
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 768) setItemsPerView(1)
+      else if (window.innerWidth < 1024) setItemsPerView(2)
+      else setItemsPerView(3)
+    }
+    handleResize()
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
+
+  const total = images.length
+  const isCarouselable = total > itemsPerView
+
+  const nextSlide = useCallback(() => {
+    if (!isCarouselable || currentIndex >= total) return
+    setIsTransitioning(true)
+    setCurrentIndex(prev => prev + 1)
+  }, [isCarouselable, currentIndex, total])
+
+  const prevSlide = useCallback(() => {
+    if (!isCarouselable || currentIndex <= -1) return
+    setIsTransitioning(true)
+    setCurrentIndex(prev => prev - 1)
+  }, [isCarouselable, currentIndex])
+
+  useEffect(() => {
+    if (isExpanded || !isCarouselable) return
+    let timer
+    if (!isHovered) {
+      timer = setInterval(nextSlide, 5000)
+    }
+    return () => clearInterval(timer)
+  }, [isHovered, isExpanded, nextSlide, isCarouselable])
+
+  useEffect(() => {
+    if (!isTransitioning) return
+    if (currentIndex >= total) {
+      const timeout = setTimeout(() => {
+        setIsTransitioning(false)
+        setCurrentIndex(0)
+      }, 500)
+      return () => clearTimeout(timeout)
+    }
+    if (currentIndex <= -1) {
+      const timeout = setTimeout(() => {
+        setIsTransitioning(false)
+        setCurrentIndex(total - 1)
+      }, 500)
+      return () => clearTimeout(timeout)
+    }
+  }, [currentIndex, total, isTransitioning])
+
+  if (total === 0) return null
+
+  if (isExpanded || !isCarouselable) {
+    return (
+      <div className="gallery-expanded-view">
+        <div className="gallery-grid">
+          {images.map(img => (
+            <GalleryImage key={img.id} src={img.url} alt={img.alt || 'Gallery'} onClick={() => openLightbox(img.id)} />
+          ))}
+        </div>
+        <div className="gallery-show-more" style={{ marginTop: '2rem' }}>
+          {isCarouselable && (
+            <button className="btn-modern-outline" onClick={() => setIsExpanded(false)}>Show Less</button>
+          )}
+        </div>
+      </div>
+    )
+  }
+
+  const leftClones = images.slice(-itemsPerView).map(item => ({ ...item, cloneId: `lc-${item.id}` }))
+  const rightClones = images.slice(0, itemsPerView).map(item => ({ ...item, cloneId: `rc-${item.id}` }))
+  const trackItems = [...leftClones, ...images, ...rightClones]
+  const translateX = -(currentIndex + itemsPerView) * (100 / itemsPerView)
+
+  return (
+    <div className="gallery-carousel-wrapper"
+         onMouseEnter={() => setIsHovered(true)}
+         onMouseLeave={() => setIsHovered(false)}
+         onTouchStart={() => setIsHovered(true)}
+         onTouchEnd={() => setIsHovered(false)}>
+
+      <button className="carousel-nav prev" onClick={prevSlide} aria-label="Previous image">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6" /></svg>
+      </button>
+
+      <div className="carousel-track-container">
+        <div
+          className="carousel-track"
+          style={{
+            transform: `translateX(${translateX}%)`,
+            transition: isTransitioning ? 'transform 0.5s ease-in-out' : 'none',
+          }}
+        >
+          {trackItems.map((item) => (
+            <div className="carousel-slide" key={item.cloneId || item.id} style={{ flex: `0 0 ${100 / itemsPerView}%` }}>
+              <div style={{ padding: '0 10px', height: '100%', boxSizing: 'border-box' }}>
+                <GalleryImage src={item.url} alt={item.alt || 'Gallery'} onClick={() => openLightbox(item.id)} />
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <button className="carousel-nav next" onClick={nextSlide} aria-label="Next image">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6" /></svg>
+      </button>
+
+      <div className="gallery-show-more">
+        <button className="btn-modern-outline" onClick={() => setIsExpanded(true)}>Show More</button>
+      </div>
+    </div>
+  )
+}
+
+/* ── 3D Flip Card Component ── */
+const InfoFlipCard = ({ data, displayTimings, displayFees, badgeClass, featureKey }) => {
+  const [isFlipped, setIsFlipped] = useState(false)
+  const [autoFlipEnabled, setAutoFlipEnabled] = useState(true)
+  const timerRef = useRef(null)
+
+  const startTimer = useCallback(() => {
+    if (timerRef.current) clearInterval(timerRef.current)
+    if (!autoFlipEnabled) return
+    
+    timerRef.current = setInterval(() => {
+      setIsFlipped(prev => !prev)
+    }, 15000) // 15 seconds to give plenty of time to read
+  }, [autoFlipEnabled])
+
+  useEffect(() => {
+    startTimer()
+    return () => {
+      if (timerRef.current) clearInterval(timerRef.current)
+    }
+  }, [startTimer])
+
+  const handleInteraction = () => {
+    setIsFlipped(prev => !prev)
+    // Disable auto-flip once the user manually interacts
+    setAutoFlipEnabled(false)
+  }
+
+  const flipIcon = (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+      <polyline points="3.29 7 12 12 20.71 7"></polyline>
+      <line x1="12" y1="22" x2="12" y2="12"></line>
+    </svg>
+  )
+
+  return (
+    <div 
+      className={`flip-card-container ${isFlipped ? 'flipped' : ''}`}
+      onClick={handleInteraction}
+      role="button"
+      tabIndex="0"
+      onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') handleInteraction() }}
+    >
+      <div className="flip-card-inner">
+        {/* Front Side: Timings */}
+        <div className="flip-card-front premium-box detail-card">
+          <h4 className="detail-card-title">
+            <IconBadge icon={siteIcons.calendar} className="title-icon" />
+            <span>Session Timings</span>
+          </h4>
+          <div className="detail-timing-list">
+            {displayTimings.map((s, i) => (
+              <div key={i} className="detail-timing-row">
+                <span className="detail-timing-time">{s.time}</span>
+                <span className={`detail-timing-badge ${badgeClass(s.badge)}`}>{s.label}</span>
+              </div>
+            ))}
+          </div>
+          {data.timingNotes && <p className="detail-card-note">{data.timingNotes}</p>}
+          <div className="flip-indicator">
+            {flipIcon} Click to view Fee Structure
+          </div>
+        </div>
+
+        {/* Back Side: Fees */}
+        <div className="flip-card-back premium-box detail-card">
+          <h4 className="detail-card-title">
+            <IconBadge icon={siteIcons.fees} className="title-icon" />
+            <span>Fee Structure</span>
+          </h4>
+          {featureKey === 'mini-hall' ? (
+            <div className="detail-custom-fees">
+              <p>{data.feeNotes}</p>
+            </div>
+          ) : (
+            <>
+              <div className="detail-fee-list">
+                {displayFees.map((f, i) => (
+                  <div key={i} className={`detail-fee-row${f.highlight ? ' highlight' : ''}${f.accent ? ' accent' : ''}`}>
+                    <span className="detail-fee-name">{f.name}</span>
+                    <span className="detail-fee-price">{f.price} {f.note && <small>{f.note}</small>}</span>
+                  </div>
+                ))}
+              </div>
+              {data.feeNotes && <p className="detail-card-note" style={{ marginTop: '1rem' }}>{data.feeNotes}</p>}
+            </>
+          )}
+          <div className="flip-indicator">
+            {flipIcon} Click to view Session Timings
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+
 /* ── Static Feature Details Map ── */
 const FEATURE_DATA = {
   'swimming-pool': {
@@ -353,7 +576,9 @@ export default function FeatureDetail({ featureKey }) {
       {/* ── Core Information ── */}
       <section className="section-space">
         <div className="container">
+          {/* Main Grid: Description on Left, Flip Card on Right */}
           <div className="detail-info-grid">
+            
             {/* Left side: Description & Highlights */}
             <div className="detail-main-info">
               <ScrollAnimation animation="fade-right">
@@ -375,110 +600,33 @@ export default function FeatureDetail({ featureKey }) {
               </ScrollAnimation>
             </div>
 
-            {/* Right side: Timings & Fee Structures */}
+            {/* Right side: 3D Flip Card (Timings & Fees) */}
             <div className="detail-side-panels">
-              {/* Timings Card */}
               <ScrollAnimation animation="fade-left" delay={100}>
-                <div className="premium-box detail-card">
-                  <h4 className="detail-card-title">
-                    <IconBadge icon={siteIcons.calendar} className="title-icon" />
-                    <span>Session Timings</span>
-                  </h4>
-                  <div className="detail-timing-list">
-                    {displayTimings.map((s, i) => (
-                      <div key={i} className="detail-timing-row">
-                        <span className="detail-timing-time">{s.time}</span>
-                        <span className={`detail-timing-badge ${badgeClass(s.badge)}`}>{s.label}</span>
-                      </div>
-                    ))}
-                  </div>
-                  {data.timingNotes && <p className="detail-card-note">{data.timingNotes}</p>}
-                </div>
-              </ScrollAnimation>
-
-              {/* Pricing Card */}
-              <ScrollAnimation animation="fade-left" delay={200}>
-                <div className="premium-box detail-card" style={{ marginTop: '1.5rem' }}>
-                  <h4 className="detail-card-title">
-                    <IconBadge icon={siteIcons.fees} className="title-icon" />
-                    <span>Fee Structure</span>
-                  </h4>
-                  
-                  {featureKey === 'mini-hall' ? (
-                    <div className="detail-custom-fees">
-                      <p>{data.feeNotes}</p>
-                    </div>
-                  ) : (
-                    <>
-                      <div className="detail-fee-list">
-                        {displayFees.map((f, i) => (
-                          <div key={i} className={`detail-fee-row${f.highlight ? ' highlight' : ''}${f.accent ? ' accent' : ''}`}>
-                            <span className="detail-fee-name">{f.name}</span>
-                            <span className="detail-fee-price">{f.price} {f.note && <small>{f.note}</small>}</span>
-                          </div>
-                        ))}
-                      </div>
-                      
-                      {data.feeNotes && <p className="detail-card-note" style={{ marginTop: '1rem' }}>{data.feeNotes}</p>}
-                    </>
-                  )}
-                </div>
+                <InfoFlipCard 
+                  data={data} 
+                  displayTimings={displayTimings} 
+                  displayFees={displayFees} 
+                  badgeClass={badgeClass} 
+                  featureKey={featureKey} 
+                />
               </ScrollAnimation>
             </div>
           </div>
         </div>
       </section>
 
-      {/* ── Gallery / Photos Section ── */}
-      <section className="section-space detail-gallery-section" style={{ background: 'rgba(0, 0, 0, 0.15)' }}>
-        <div className="container">
-          <ScrollAnimation animation="scale-up">
-            <div className="section-header" style={{ textAlign: 'center' }}>
-              <span className="section-label">Visual Tour</span>
-              <h2>Photo Gallery</h2>
-              <p className="text-muted">A look inside our premier facilities and active sessions.</p>
-            </div>
-          </ScrollAnimation>
-
-          {loadingGallery ? (
-            <div className="detail-gallery-loading">
-              <div className="loader" />
-              <p style={{ marginTop: '1rem', color: 'var(--text-muted)' }}>Loading gallery images...</p>
-            </div>
-          ) : images.length > 0 ? (
-            <ScrollAnimation animation="fade-up" delay={150}>
-              <div className="detail-gallery-grid">
-                {images.map(img => (
-                  <GalleryImage
-                    key={img.id}
-                    src={img.url}
-                    alt={img.alt || data.title}
-                    onClick={() => openLightbox(img.id)}
-                  />
-                ))}
-              </div>
+      {/* ── Visual Tour Section (full-width Gallery carousel at bottom) ── */}
+      {!loadingGallery && images.length > 0 && (
+        <section className="section-space" style={{ paddingTop: '0.5rem' }}>
+          <div className="container">
+            <ScrollAnimation animation="fade-up">
+              <h2 className="gallery-section-title" style={{ marginBottom: '2rem' }}>Visual Tour</h2>
+              <FeatureGalleryCarousel images={images} openLightbox={openLightbox} />
             </ScrollAnimation>
-          ) : (
-            <div className="gallery-placeholder-msg">No images uploaded for this category yet. We are updating soon!</div>
-          )}
-        </div>
-      </section>
-
-      {/* ── CTA Banner ── */}
-      <section className="section-space detail-cta-section">
-        <div className="container">
-          <ScrollAnimation animation="scale-up">
-            <div className="detail-cta-box">
-              <h3>Start Your Journey Today</h3>
-              <p>Join the BLUEWAVES community to master your swimming strokes, attend yoga sessions, or reserve our elegant mini hall for your next event.</p>
-              <div className="detail-cta-buttons">
-                <a href={waLink} target="_blank" rel="noreferrer" className="btn-brand">Enquire on WhatsApp</a>
-                <Link to="/contact" className="btn-modern-outline">Book a Visit</Link>
-              </div>
-            </div>
-          </ScrollAnimation>
-        </div>
-      </section>
+          </div>
+        </section>
+      )}
 
       {/* ── Lightbox Overlay (Portal) ── */}
       {lightboxIndex !== null && images[lightboxIndex] && createPortal(

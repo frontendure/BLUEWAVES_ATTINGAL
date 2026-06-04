@@ -271,20 +271,10 @@ export default function Home() {
                       ) : (
                         <div className="feature-card-placeholder-gradient" />
                       )}
-                      <div className="feature-card-icon-wrapper">
-                        <IconBadge icon={f.icon} className="feature-icon" />
-                      </div>
                     </div>
                     <div className="feature-card-body">
                       <h5>{f.title}</h5>
                       <p>{f.desc}</p>
-                      <span className="feature-card-more">
-                        Explore Program
-                        <svg className="more-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                          <line x1="5" y1="12" x2="19" y2="12"></line>
-                          <polyline points="12 5 19 12 12 19"></polyline>
-                        </svg>
-                      </span>
                     </div>
                   </Link>
                 </ScrollAnimation>
