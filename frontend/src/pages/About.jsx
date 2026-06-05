@@ -64,12 +64,12 @@ export default function About() {
               <p>That same thinking shapes the full experience today: clear schedules, safer circulation areas, wellness programs that complement swim training, and a setting that feels premium without becoming intimidating.</p>
               <div className="story-stats">
                 <div className="story-stat">
-                  <strong>2018</strong>
-                  <span>Blue Waves opened in Attingal.</span>
+                  <strong>Inaugurated in 2026</strong>
+                  <span>Blue Waves was inaugurated on 25th January 2026.</span>
                 </div>
                 <div className="story-stat">
-                  <strong>3 tracks</strong>
-                  <span>Swimming, yoga, and zumba under one roof.</span>
+                  <strong>5 tracks</strong>
+                  <span>5 spacious tracks for uninterrupted swimming.</span>
                 </div>
                 <div className="story-stat">
                   <strong>All ages</strong>
@@ -79,7 +79,7 @@ export default function About() {
             </div>
             <div className="about-visual animate-on-load-delayed">
               <div className="about-image-frame">
-                <img src="/assets/hero-optimized.jpg" alt="Blue Waves pool deck" loading="lazy" decoding="async" />
+                <img src="/assets/inag-comp.jpg" alt="Blue Waves pool deck" loading="lazy" decoding="async" />
               </div>
               <div className="about-highlight-card">
                 <span className="section-label">What Matters Here</span>
@@ -112,7 +112,7 @@ export default function About() {
           </div>
         </div>
       </section>
-      
+
       <section className="section-space about-rules-section">
         <div className="container">
           <ScrollAnimation animation="scale-up">
@@ -122,7 +122,7 @@ export default function About() {
               <p className="text-muted">To ensure a safe, clean, and premium environment for everyone, please adhere to our strict guidelines.</p>
             </div>
           </ScrollAnimation>
-          
+
           <ScrollAnimation delay={200} animation="fade-up">
             <div className="premium-box rules-box">
               <div className="rules-grid">

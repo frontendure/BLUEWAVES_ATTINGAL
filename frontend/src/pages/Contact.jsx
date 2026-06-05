@@ -21,13 +21,18 @@ export default function Contact() {
 
   return (
     <>
-      <section className="section-space about-story">
+      <section className="section-space">
         <div className="container">
+          <ScrollAnimation animation="scale-up">
+            <div className="section-header section-header-center">
+              <span className="section-label">Connect With Us</span>
+              <h2>Get In Touch</h2>
+              <p className="text-muted">Whether you are looking to refine your stroke, enroll your child in our academy, or inquire about our executive memberships, we are here to help.</p>
+            </div>
+          </ScrollAnimation>
           <div className="contact-grid">
             <ScrollAnimation delay={100} animation="fade-right">
               <div className="contact-info">
-                <h3>Get In Touch</h3>
-                <p className="text-muted">Whether you are looking to refine your stroke, enroll your child in our academy, or inquire about our executive memberships, we are here to help.</p><br />
                 <div className="contact-item"><IconBadge icon={siteIcons.location} className="contact-icon" /><div><h6>Our Location</h6><p><a href="https://maps.app.goo.gl/wrqd2AQjrpPMctRj9" target="_blank" rel="noreferrer">Pwd Rest House Road, Tb Junction Attingal, Trivandrum 695101</a></p></div></div>
                 <div className="contact-item"><IconBadge icon={siteIcons.phone} className="contact-icon" /><div><h6>Concierge Desk</h6><p><a href="tel:+918090900914">+91 8090900914</a><br />Mon-Sun: 6am - 10pm</p></div></div>
                 <div className="contact-item"><IconBadge icon={siteIcons.email} className="contact-icon" /><div><h6>Email Inquiry</h6><p><a href="mailto:bluewavesattingal@gmail.com">bluewavesattingal@gmail.com</a></p></div></div>
